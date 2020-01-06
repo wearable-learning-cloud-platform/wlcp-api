@@ -2,7 +2,7 @@ spring:
   application:
     name: wlcp-api
   datasource:
-    url: jdbc:mysql://wlcp-api-db:3307/wlcp-api
+    url: jdbc:mysql://wlcp-api-db:3306/wlcp-api
     username: wlcp
     password: wlcp
   jpa:
