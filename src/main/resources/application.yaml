@@ -1,9 +1,19 @@
 spring:
   application:
     name: wlcp-api
+  datasource:
+    url: jdbc:mysql://localhost:3307/wlcp-api
+    username: wlcp
+    password: wlcp
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
 server:
   port: 8082
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: docker-host
