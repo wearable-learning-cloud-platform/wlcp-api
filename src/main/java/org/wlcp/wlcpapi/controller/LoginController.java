@@ -2,6 +2,9 @@ package org.wlcp.wlcpapi.controller;
 
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +26,14 @@ public class LoginController {
 
 	@PostMapping(value="/userLogin")
 	@ResponseBody
-	public ResponseEntity<Boolean> login(@RequestBody UsernameDto usernameDto) { 
+	public ResponseEntity<Boolean> login(HttpServletResponse response, @RequestBody UsernameDto usernameDto) { 
 		Optional<Username> username = usernameRepository.findById(usernameDto.username);
 		if(username.isPresent()) {
+			Cookie cookie = new Cookie("wlcp.userSession", username.get().getUsernameId());
+			cookie.setMaxAge(15 * 60);
+			cookie.setPath("/");
+			cookie.setHttpOnly(false);
+			response.addCookie(cookie);
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}
 		else {
