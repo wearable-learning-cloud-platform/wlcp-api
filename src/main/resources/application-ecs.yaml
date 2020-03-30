@@ -2,14 +2,17 @@ spring:
   application:
     name: wlcp-api
   datasource:
-    url: jdbc:h2:file:~/test
-    username: sa
-    password: 
-    driver-class-name: org.h2.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.mysql.jdbc.driver
+  liquibase:
+    change-log: classpath:liquibase/changelogs/liquibase-parent-changelog.xml
+    default-schema: ${DB_SCHEMA}
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         event:
