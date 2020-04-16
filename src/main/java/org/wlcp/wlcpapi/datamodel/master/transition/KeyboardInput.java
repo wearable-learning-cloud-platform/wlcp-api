@@ -13,10 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Entity implementation class for Entity: KeyboardInput
@@ -36,7 +33,6 @@ public class KeyboardInput implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "TRANSITION_ID")
-	@JsonIgnoreProperties(value= {"game", "connection", "activeTransitions", "singleButtonPresses", "sequenceButtonPresses", "keyboardInputs"})
 	private Transition transition;
 	
 	@Column(name = "SCOPE")

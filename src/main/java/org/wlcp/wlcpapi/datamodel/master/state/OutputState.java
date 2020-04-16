@@ -5,11 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.*;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
-import org.wlcp.wlcpapi.datamodel.master.transition.SingleButtonPress;
 
 /**
  * Entity implementation class for Entity: OutputState
@@ -26,7 +31,7 @@ public class OutputState extends State implements Serializable {
 	@Column(name = "DESCRIPTION")
 	private String description;
 	
-	@ElementCollection
+	@ElementCollection()
     @CollectionTable(name = "DISPLAY_TEXT_MAP")
     @MapKeyColumn(name = "SCOPE")
     @Column(name = "DISPLAY_TEXT", length = 2048)

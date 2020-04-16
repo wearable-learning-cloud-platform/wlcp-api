@@ -15,13 +15,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * Entity implementation class for Entity: Transition
@@ -29,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @Entity
 @Table(name = "TRANSITION")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "transitionId")
 public class Transition implements Serializable {
 
 	
@@ -38,14 +40,12 @@ public class Transition implements Serializable {
 	@Column(name = "TRANSITION_ID")
 	private String transitionId;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "GAME")
-	@JsonIgnore
 	private Game game;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "CONNECTION")
-	@JsonIgnoreProperties(value= {"game", "connectionFrom", "connectionTo", "backwardsLoop", "transition"})
 	private Connection connection;
 	
 	@ElementCollection()

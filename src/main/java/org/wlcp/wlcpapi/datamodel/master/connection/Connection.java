@@ -8,14 +8,18 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.state.State;
 import org.wlcp.wlcpapi.datamodel.master.transition.Transition;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+
 
 /**
  * Entity implementation class for Entity: Connection
@@ -23,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @Entity
 @Table(name = "CONNECTION")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "connectionId")
 public class Connection implements Serializable {
 
 	
@@ -32,27 +37,24 @@ public class Connection implements Serializable {
 	@Column(name = "CONNECTION_ID")
 	private String connectionId;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "GAME")
-	@JsonIgnore
 	private Game game;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "CONNECTION_FROM")
-	@JsonIgnoreProperties(value= {"game", "stateType", "positionX", "positionY", "inputConnections", "outputConnections", "description", "displayText"})
 	private State connectionFrom;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "CONNECTION_TO")
-	@JsonIgnoreProperties(value= {"game", "stateType", "positionX", "positionY", "inputConnections", "outputConnections", "description", "displayText"})
 	private State connectionTo;
 	
 	@Column(name = "BACKWARDS_LOOP")
 	private Boolean backwardsLoop;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "TRANSITION")
-	@JsonIgnoreProperties(value= {"game", "connection", "activeTransitions", "singleButtonPresses", "sequenceButtonPresses", "keyboardInputs"})
+	@JsonIdentityReference(alwaysAsId = true)
 	private Transition transition;
 
 	public Connection() {

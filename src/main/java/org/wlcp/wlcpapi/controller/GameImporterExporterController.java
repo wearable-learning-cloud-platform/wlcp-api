@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.Username;
+import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
 import org.wlcp.wlcpapi.datamodel.master.state.OutputState;
 import org.wlcp.wlcpapi.datamodel.master.state.PictureOutput;
 import org.wlcp.wlcpapi.datamodel.master.state.State;
@@ -48,6 +50,36 @@ public class GameImporterExporterController {
 	@PostMapping(value="/importGame")
 	@Transactional
 	public ResponseEntity<String> importGame(@RequestParam("file") MultipartFile file) throws IOException {
+	
+		ObjectInputStream in = new WlcpObjectInputStream(file.getInputStream());
+		Game game = null;
+		try {
+			game = (Game) in.readObject();
+		} catch (ClassNotFoundException e) {
+			in.close();
+			e.printStackTrace();
+			return new ResponseEntity<String>("Error importing!", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+			
+		in.close();
+		
+		for(Transition transition : game.getTransitions()) {
+			for(Entry<String, SequenceButtonPress> entry : transition.getSequenceButtonPresses().entrySet()) {
+				entry.getValue().setSequenceButtonPressId(null);
+			}
+			for(Entry<String, KeyboardInput> entry : transition.getKeyboardInputs().entrySet()) {
+				entry.getValue().setKeyboardInputId(null);
+			}
+		}
+		
+		entityManager.persist(game);
+		
+		return new ResponseEntity<String>("Import Success!", HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/importGame2")
+	@Transactional
+	public ResponseEntity<String> importGame2(@RequestParam("file") MultipartFile file) throws IOException {
 	
 		ObjectInputStream in = new WlcpObjectInputStream(file.getInputStream());
 		Game game = null;
