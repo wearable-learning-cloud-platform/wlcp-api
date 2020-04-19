@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
 
@@ -51,19 +53,23 @@ public class Transition implements Serializable {
 	@ElementCollection()
     @CollectionTable(name = "ACTIVE_TRANSITIONS")
     @MapKeyColumn(name = "SCOPE")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Map<String, String> activeTransitions = new HashMap<String, String>();
 	
 	@ElementCollection()
     @CollectionTable(name = "SINGLE_BUTTON_PRESS")
     @MapKeyColumn(name = "SCOPE")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Map<String, SingleButtonPress> singleButtonPresses = new HashMap<String, SingleButtonPress>();
 	
 	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL)
 	@MapKey(name = "scope")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Map<String, SequenceButtonPress> sequenceButtonPresses = new HashMap<String, SequenceButtonPress>();
 	
 	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL)
 	@MapKey(name = "scope")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Map<String, KeyboardInput> keyboardInputs = new HashMap<String, KeyboardInput>();
 
 	public Transition() {

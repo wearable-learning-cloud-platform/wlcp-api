@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 /**
  * Entity implementation class for Entity: KeyboardInput
  *
@@ -38,6 +41,7 @@ public class KeyboardInput implements Serializable {
 	@ElementCollection
 	@CollectionTable(name="KEYBOARD_INPUTS", joinColumns=@JoinColumn(name="KEYBOARD_INPUT_ID"))
 	@Column(name="KEYBOARD_INPUT")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<String> keyboardInputs = new ArrayList<String>();
 
 	public KeyboardInput() {
