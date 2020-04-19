@@ -8,8 +8,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,8 +26,7 @@ public class KeyboardInput implements Serializable {
 	
 	@Id
 	@Column(name = "KEYBOARD_INPUT_ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer keyboardInputId;
+	private String keyboardInputId;
 	
 	@ManyToOne
 	@JoinColumn(name = "TRANSITION_ID")
@@ -47,18 +44,19 @@ public class KeyboardInput implements Serializable {
 		super();
 	}
 
-	public KeyboardInput(Transition transition, String scope, List<String> keyboardInputs) {
+	public KeyboardInput(String keyboardInputId, Transition transition, String scope, List<String> keyboardInputs) {
 		super();
+		this.keyboardInputId = keyboardInputId;
 		this.transition = transition;
 		this.scope = scope;
 		this.keyboardInputs = keyboardInputs;
 	}
 
-	public Integer getKeyboardInputId() {
+	public String getKeyboardInputId() {
 		return keyboardInputId;
 	}
 
-	public void setKeyboardInputId(Integer keyboardInputId) {
+	public void setKeyboardInputId(String keyboardInputId) {
 		this.keyboardInputId = keyboardInputId;
 	}
 

@@ -2,9 +2,6 @@ package org.wlcp.wlcpapi.service.impl;
 
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +21,6 @@ public class CreateLoadSaveGameServiceImpl implements CreateLoadSaveGameService 
 	
 	@Autowired
 	private GameRepository gameRepository;
-	
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	@Override
 	public Game createGame(CreateGameDto createGameDto) {

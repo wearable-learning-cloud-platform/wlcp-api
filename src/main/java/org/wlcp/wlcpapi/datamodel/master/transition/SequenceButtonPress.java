@@ -8,8 +8,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,8 +27,7 @@ public class SequenceButtonPress implements Serializable {
 	
 	@Id
 	@Column(name = "SEQUENCE_BUTTON_PRESS_ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer sequenceButtonPressId;
+	private String sequenceButtonPressId;
 	
 	@ManyToOne
 	@JoinColumn(name = "TRANSITION_ID")
@@ -48,18 +45,19 @@ public class SequenceButtonPress implements Serializable {
 		super();
 	}
 
-	public SequenceButtonPress(Transition transition, String scope, List<String> sequences) {
+	public SequenceButtonPress(String sequenceButtonPressId, Transition transition, String scope, List<String> sequences) {
 		super();
+		this.sequenceButtonPressId = sequenceButtonPressId;
 		this.transition = transition;
 		this.scope = scope;
 		this.sequences = sequences;
 	}
 
-	public Integer getSequenceButtonPressId() {
+	public String getSequenceButtonPressId() {
 		return sequenceButtonPressId;
 	}
 
-	public void setSequenceButtonPressId(Integer sequenceButtonPressId) {
+	public void setSequenceButtonPressId(String sequenceButtonPressId) {
 		this.sequenceButtonPressId = sequenceButtonPressId;
 	}
 

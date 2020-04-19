@@ -3,9 +3,6 @@ package org.wlcp.wlcpapi.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wlcp.wlcpapi.datamodel.master.Game;
@@ -19,9 +16,6 @@ public class LoadGameServiceImpl implements LoadGameService {
 
 	@Autowired
 	private GameRepository gameRepository;
-	
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	@Override
 	public List<GameDto> getPrivateGames(String usernameId) {
@@ -51,7 +45,7 @@ public class LoadGameServiceImpl implements LoadGameService {
 	
 	@Override
 	public Game loadGame(String gameId) {
-		return entityManager.find(Game.class, gameId);
+		return gameRepository.findById(gameId).get();
 	}
 
 }

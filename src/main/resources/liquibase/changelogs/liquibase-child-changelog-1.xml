@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <changeSet author="Matt (generated)" id="1585606348094-1">
+    <changeSet author="Matt (generated)" id="1587257003851-1">
         <createTable tableName="active_transitions">
             <column name="transition_transition_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -11,7 +11,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-2">
+    <changeSet author="Matt (generated)" id="1587257003851-2">
         <createTable tableName="connection">
             <column name="connection_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -23,7 +23,7 @@
             <column name="transition" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-3">
+    <changeSet author="Matt (generated)" id="1587257003851-3">
         <createTable tableName="display_text_map">
             <column name="output_state_state_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -34,7 +34,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-4">
+    <changeSet author="Matt (generated)" id="1587257003851-4">
         <createTable tableName="game">
             <column name="game_id" type="VARCHAR(40)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -51,7 +51,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-5">
+    <changeSet author="Matt (generated)" id="1587257003851-5">
         <createTable tableName="game_connections">
             <column name="game_id" type="VARCHAR(40)">
                 <constraints nullable="false"/>
@@ -61,7 +61,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-6">
+    <changeSet author="Matt (generated)" id="1587257003851-6">
         <createTable tableName="game_states">
             <column name="game_id" type="VARCHAR(40)">
                 <constraints nullable="false"/>
@@ -71,7 +71,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-7">
+    <changeSet author="Matt (generated)" id="1587257003851-7">
         <createTable tableName="game_transitions">
             <column name="game_id" type="VARCHAR(40)">
                 <constraints nullable="false"/>
@@ -81,7 +81,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-8">
+    <changeSet author="Matt (generated)" id="1587257003851-8">
         <createTable tableName="input_connections">
             <column name="state_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -91,24 +91,24 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-9">
+    <changeSet author="Matt (generated)" id="1587257003851-9">
         <createTable tableName="keyboard_input">
-            <column autoIncrement="true" name="keyboard_input_id" type="INT">
+            <column name="keyboard_input_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="scope" type="VARCHAR(255)"/>
             <column name="transition_id" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-10">
+    <changeSet author="Matt (generated)" id="1587257003851-10">
         <createTable tableName="keyboard_inputs">
-            <column name="keyboard_input_id" type="INT">
+            <column name="keyboard_input_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="keyboard_input" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-11">
+    <changeSet author="Matt (generated)" id="1587257003851-11">
         <createTable tableName="output_connections">
             <column name="state_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -118,7 +118,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-12">
+    <changeSet author="Matt (generated)" id="1587257003851-12">
         <createTable tableName="output_state">
             <column name="description" type="VARCHAR(255)"/>
             <column name="state_id" type="VARCHAR(255)">
@@ -126,7 +126,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-13">
+    <changeSet author="Matt (generated)" id="1587257003851-13">
         <createTable tableName="picture_output">
             <column name="output_state_state_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -138,24 +138,24 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-14">
+    <changeSet author="Matt (generated)" id="1587257003851-14">
         <createTable tableName="sequence_button_press">
-            <column autoIncrement="true" name="sequence_button_press_id" type="INT">
+            <column name="sequence_button_press_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="scope" type="VARCHAR(255)"/>
             <column name="transition_id" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-15">
+    <changeSet author="Matt (generated)" id="1587257003851-15">
         <createTable tableName="sequence_button_presses">
-            <column name="sequence_button_press_id" type="INT">
+            <column name="sequence_button_press_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="sequences" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-16">
+    <changeSet author="Matt (generated)" id="1587257003851-16">
         <createTable tableName="single_button_press">
             <column name="transition_transition_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -169,14 +169,14 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-17">
+    <changeSet author="Matt (generated)" id="1587257003851-17">
         <createTable tableName="start_state">
             <column name="state_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-18">
+    <changeSet author="Matt (generated)" id="1587257003851-18">
         <createTable tableName="state">
             <column name="state_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -187,7 +187,7 @@
             <column name="game" type="VARCHAR(40)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-19">
+    <changeSet author="Matt (generated)" id="1587257003851-19">
         <createTable tableName="transition">
             <column name="transition_id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -196,7 +196,7 @@
             <column name="game" type="VARCHAR(40)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-20">
+    <changeSet author="Matt (generated)" id="1587257003851-20">
         <createTable tableName="username">
             <column name="username_id" type="VARCHAR(40)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -207,173 +207,173 @@
             <column name="password" type="VARCHAR(40)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-21">
+    <changeSet author="Matt (generated)" id="1587257003851-21">
         <createIndex indexName="FK39jgfm7wx03rqlelg55w8ellw" tableName="keyboard_input">
             <column name="transition_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-22">
+    <changeSet author="Matt (generated)" id="1587257003851-22">
         <createIndex indexName="FK3e7q3a8xkdg290xqbvcgfppq1" tableName="connection">
             <column name="connection_from"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-23">
+    <changeSet author="Matt (generated)" id="1587257003851-23">
         <createIndex indexName="FK3m3jhuk6tx8n7x003pkdnxpiy" tableName="game_states">
             <column name="game_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-24">
+    <changeSet author="Matt (generated)" id="1587257003851-24">
         <createIndex indexName="FK3opsmraa23r4i7slw5fqtfic3" tableName="transition">
             <column name="connection"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-25">
+    <changeSet author="Matt (generated)" id="1587257003851-25">
         <createIndex indexName="FK4a32l4u33vn740g7h53v6kk5f" tableName="game">
             <column name="username"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-26">
+    <changeSet author="Matt (generated)" id="1587257003851-26">
         <createIndex indexName="FK5110878maxlyvr43nfs4yxvxs" tableName="connection">
             <column name="game"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-27">
+    <changeSet author="Matt (generated)" id="1587257003851-27">
         <createIndex indexName="FK5ha0rc5ts7w0k9gijts03gmkk" tableName="sequence_button_press">
             <column name="transition_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-28">
+    <changeSet author="Matt (generated)" id="1587257003851-28">
         <createIndex indexName="FK90hnc2esdt6qx5m0ipa1wjudq" tableName="game_connections">
             <column name="game_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-29">
+    <changeSet author="Matt (generated)" id="1587257003851-29">
         <createIndex indexName="FKa6i3y3busrny9jnle14pb76cl" tableName="state">
             <column name="game"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-30">
+    <changeSet author="Matt (generated)" id="1587257003851-30">
         <createIndex indexName="FKe67iiyl9s1i1l7kjvn6oehude" tableName="input_connections">
             <column name="state_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-31">
+    <changeSet author="Matt (generated)" id="1587257003851-31">
         <createIndex indexName="FKg172152tp0ck4lij2821sxl5e" tableName="game_transitions">
             <column name="game_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-32">
+    <changeSet author="Matt (generated)" id="1587257003851-32">
         <createIndex indexName="FKh806c0gyt1v73m1jy92kpfo84" tableName="keyboard_inputs">
             <column name="keyboard_input_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-33">
+    <changeSet author="Matt (generated)" id="1587257003851-33">
         <createIndex indexName="FKigy7lgy7u9jnpx6cobmttl91c" tableName="output_connections">
             <column name="state_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-34">
+    <changeSet author="Matt (generated)" id="1587257003851-34">
         <createIndex indexName="FKju6h79jme92gtowjx2ipm8tf6" tableName="connection">
             <column name="connection_to"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-35">
+    <changeSet author="Matt (generated)" id="1587257003851-35">
         <createIndex indexName="FKl43lr7r5chr84muatj7nibq8h" tableName="sequence_button_presses">
             <column name="sequence_button_press_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-36">
+    <changeSet author="Matt (generated)" id="1587257003851-36">
         <createIndex indexName="FKo3c6h7puddnh8c8nehqg3qiq9" tableName="transition">
             <column name="game"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-37">
+    <changeSet author="Matt (generated)" id="1587257003851-37">
         <createIndex indexName="FKrh5ogta9x8259hwq0nrk82vsd" tableName="connection">
             <column name="transition"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-38">
+    <changeSet author="Matt (generated)" id="1587257003851-38">
         <addForeignKeyConstraint baseColumnNames="transition_id" baseTableName="keyboard_input" constraintName="FK39jgfm7wx03rqlelg55w8ellw" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="transition_id" referencedTableName="transition" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-39">
+    <changeSet author="Matt (generated)" id="1587257003851-39">
         <addForeignKeyConstraint baseColumnNames="connection_from" baseTableName="connection" constraintName="FK3e7q3a8xkdg290xqbvcgfppq1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="state" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-40">
+    <changeSet author="Matt (generated)" id="1587257003851-40">
         <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="game_states" constraintName="FK3m3jhuk6tx8n7x003pkdnxpiy" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-41">
+    <changeSet author="Matt (generated)" id="1587257003851-41">
         <addForeignKeyConstraint baseColumnNames="connection" baseTableName="transition" constraintName="FK3opsmraa23r4i7slw5fqtfic3" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="connection_id" referencedTableName="connection" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-42">
+    <changeSet author="Matt (generated)" id="1587257003851-42">
         <addForeignKeyConstraint baseColumnNames="username" baseTableName="game" constraintName="FK4a32l4u33vn740g7h53v6kk5f" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="username_id" referencedTableName="username" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-43">
+    <changeSet author="Matt (generated)" id="1587257003851-43">
         <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="output_state" constraintName="FK4b6du14llh8q6j82g4ofhmnbj" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="state" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-44">
+    <changeSet author="Matt (generated)" id="1587257003851-44">
         <addForeignKeyConstraint baseColumnNames="game" baseTableName="connection" constraintName="FK5110878maxlyvr43nfs4yxvxs" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-45">
+    <changeSet author="Matt (generated)" id="1587257003851-45">
         <addForeignKeyConstraint baseColumnNames="transition_id" baseTableName="sequence_button_press" constraintName="FK5ha0rc5ts7w0k9gijts03gmkk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="transition_id" referencedTableName="transition" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-46">
+    <changeSet author="Matt (generated)" id="1587257003851-46">
         <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="start_state" constraintName="FK701799102y5db6tphlrwtgxk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="state" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-47">
+    <changeSet author="Matt (generated)" id="1587257003851-47">
         <addForeignKeyConstraint baseColumnNames="transition_id" baseTableName="game_transitions" constraintName="FK7bde3bldrginbj2nq1aod3r3o" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="transition_id" referencedTableName="transition" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-48">
+    <changeSet author="Matt (generated)" id="1587257003851-48">
         <addForeignKeyConstraint baseColumnNames="output_state_state_id" baseTableName="picture_output" constraintName="FK7wsd2y1dhrdtm59ux53p281o8" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="output_state" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-49">
+    <changeSet author="Matt (generated)" id="1587257003851-49">
         <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="game_connections" constraintName="FK90hnc2esdt6qx5m0ipa1wjudq" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-50">
+    <changeSet author="Matt (generated)" id="1587257003851-50">
         <addForeignKeyConstraint baseColumnNames="game" baseTableName="state" constraintName="FKa6i3y3busrny9jnle14pb76cl" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-51">
+    <changeSet author="Matt (generated)" id="1587257003851-51">
         <addForeignKeyConstraint baseColumnNames="connection_id" baseTableName="game_connections" constraintName="FKabmqjnydcfrsogpspurtq4cjo" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="connection_id" referencedTableName="connection" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-52">
+    <changeSet author="Matt (generated)" id="1587257003851-52">
         <addForeignKeyConstraint baseColumnNames="output_state_state_id" baseTableName="display_text_map" constraintName="FKai1r7x1fcnx900spspvst8ima" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="output_state" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-53">
+    <changeSet author="Matt (generated)" id="1587257003851-53">
         <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="input_connections" constraintName="FKe67iiyl9s1i1l7kjvn6oehude" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="state" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-54">
+    <changeSet author="Matt (generated)" id="1587257003851-54">
         <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="game_transitions" constraintName="FKg172152tp0ck4lij2821sxl5e" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-55">
+    <changeSet author="Matt (generated)" id="1587257003851-55">
         <addForeignKeyConstraint baseColumnNames="transition_transition_id" baseTableName="active_transitions" constraintName="FKh2hbx8rwpnskrecux3lobsdfw" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="transition_id" referencedTableName="transition" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-56">
+    <changeSet author="Matt (generated)" id="1587257003851-56">
         <addForeignKeyConstraint baseColumnNames="keyboard_input_id" baseTableName="keyboard_inputs" constraintName="FKh806c0gyt1v73m1jy92kpfo84" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="keyboard_input_id" referencedTableName="keyboard_input" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-57">
+    <changeSet author="Matt (generated)" id="1587257003851-57">
         <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="output_connections" constraintName="FKigy7lgy7u9jnpx6cobmttl91c" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="state" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-58">
+    <changeSet author="Matt (generated)" id="1587257003851-58">
         <addForeignKeyConstraint baseColumnNames="transition_transition_id" baseTableName="single_button_press" constraintName="FKildver6yh6gkumbojji5tk9fv" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="transition_id" referencedTableName="transition" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-59">
+    <changeSet author="Matt (generated)" id="1587257003851-59">
         <addForeignKeyConstraint baseColumnNames="connection_to" baseTableName="connection" constraintName="FKju6h79jme92gtowjx2ipm8tf6" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="state" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-60">
+    <changeSet author="Matt (generated)" id="1587257003851-60">
         <addForeignKeyConstraint baseColumnNames="sequence_button_press_id" baseTableName="sequence_button_presses" constraintName="FKl43lr7r5chr84muatj7nibq8h" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="sequence_button_press_id" referencedTableName="sequence_button_press" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-61">
+    <changeSet author="Matt (generated)" id="1587257003851-61">
         <addForeignKeyConstraint baseColumnNames="game" baseTableName="transition" constraintName="FKo3c6h7puddnh8c8nehqg3qiq9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-62">
+    <changeSet author="Matt (generated)" id="1587257003851-62">
         <addForeignKeyConstraint baseColumnNames="connection_id" baseTableName="input_connections" constraintName="FKo6knvwgqfvg5ma4hfxdctg8on" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="connection_id" referencedTableName="connection" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-63">
+    <changeSet author="Matt (generated)" id="1587257003851-63">
         <addForeignKeyConstraint baseColumnNames="connection_id" baseTableName="output_connections" constraintName="FKpoyugkf7h0hx90bwx9t4hr2je" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="connection_id" referencedTableName="connection" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-64">
+    <changeSet author="Matt (generated)" id="1587257003851-64">
         <addForeignKeyConstraint baseColumnNames="transition" baseTableName="connection" constraintName="FKrh5ogta9x8259hwq0nrk82vsd" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="transition_id" referencedTableName="transition" validate="true"/>
     </changeSet>
-    <changeSet author="Matt (generated)" id="1585606348094-65">
+    <changeSet author="Matt (generated)" id="1587257003851-65">
         <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="game_states" constraintName="FKrnqgsgeapb2vwe75hjwbrop0x" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="state" validate="true"/>
     </changeSet>
 </databaseChangeLog>
