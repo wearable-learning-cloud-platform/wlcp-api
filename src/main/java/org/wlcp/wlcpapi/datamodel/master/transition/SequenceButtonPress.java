@@ -13,9 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 /**
  * Entity implementation class for Entity: SequenceButtonPress
  *
@@ -42,7 +39,6 @@ public class SequenceButtonPress implements Serializable {
 	@ElementCollection
 	@CollectionTable(name="SEQUENCE_BUTTON_PRESSES", joinColumns=@JoinColumn(name="SEQUENCE_BUTTON_PRESS_ID"))
 	@Column(name="SEQUENCES")
-	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<String> sequences = new ArrayList<String>();
 
 	public SequenceButtonPress() {

@@ -13,8 +13,6 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
 
@@ -37,13 +35,11 @@ public class OutputState extends State implements Serializable {
     @CollectionTable(name = "DISPLAY_TEXT_MAP")
     @MapKeyColumn(name = "SCOPE")
     @Column(name = "DISPLAY_TEXT", length = 2048)
-	@LazyCollection(LazyCollectionOption.FALSE)
 	private Map<String, String> displayText = new HashMap<String, String>();
 	
 	@ElementCollection()
     @CollectionTable(name = "PICTURE_OUTPUT")
     @MapKeyColumn(name = "SCOPE")
-	@LazyCollection(LazyCollectionOption.FALSE)
 	private Map<String, PictureOutput> pictureOutputs = new HashMap<String, PictureOutput>();
 
 	public OutputState() {

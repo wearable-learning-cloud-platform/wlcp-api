@@ -14,8 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
 import org.wlcp.wlcpapi.datamodel.master.state.State;
 import org.wlcp.wlcpapi.datamodel.master.transition.Transition;
@@ -66,17 +64,14 @@ public class Game implements Serializable {
 	
 	@JoinTable(name = "GAME_STATES", joinColumns = @JoinColumn(name = "GAME_ID", referencedColumnName = "GAME_ID"), inverseJoinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"))
 	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<State> states = new ArrayList<State>();
 	
 	@JoinTable(name = "GAME_CONNECTIONS", joinColumns = @JoinColumn(name = "GAME_ID", referencedColumnName = "GAME_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
 	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Connection> connections = new ArrayList<Connection>();
 	
 	@JoinTable(name = "GAME_TRANSITIONS", joinColumns = @JoinColumn(name = "GAME_ID", referencedColumnName = "GAME_ID"), inverseJoinColumns = @JoinColumn(name = "TRANSITION_ID", referencedColumnName = "TRANSITION_ID"))
 	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Transition> transitions = new ArrayList<Transition>();
 
 	public Game() {

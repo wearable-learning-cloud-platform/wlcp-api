@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map.Entry;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +69,39 @@ public class CopyRenameDeleteGameServiceImpl implements org.wlcp.wlcpapi.service
 	private void deepCopyGame(String gameId, String newGameId, String usernameId) {
 		Game game = gameRepository.findById(gameId).get();
 		Username username = usernameRepository.findById(usernameId).get();
+		
+		//Initialize Lazy Load Proxy's
+		//This should and can be done generically and recursively. Temporary for now.
+		Hibernate.initialize(game.getStates());
+		Hibernate.initialize(game.getConnections());
+		Hibernate.initialize(game.getTransitions());
+		
+		for(State state : game.getStates()) {
+			Hibernate.initialize(state.getInputConnections());
+			Hibernate.initialize(state.getOutputConnections());
+			if(state instanceof OutputState) {
+				Hibernate.initialize(((OutputState) state).getDisplayText());
+				Hibernate.initialize(((OutputState) state).getPictureOutputs());
+			}
+		}
+		
+		for(Connection connection : game.getConnections()) {
+			Hibernate.initialize(connection.getConnectionFrom());
+			Hibernate.initialize(connection.getConnectionTo());
+		}
+		
+		for(Transition transition : game.getTransitions()) {
+			Hibernate.initialize(transition.getActiveTransitions());
+			Hibernate.initialize(transition.getSingleButtonPresses());
+			Hibernate.initialize(transition.getSequenceButtonPresses());
+			Hibernate.initialize(transition.getKeyboardInputs());
+			for(Entry<String, SequenceButtonPress> entry : transition.getSequenceButtonPresses().entrySet()) {
+				Hibernate.initialize(entry.getValue().getSequences());
+			}
+			for(Entry<String, KeyboardInput> entry : transition.getKeyboardInputs().entrySet()) {
+				Hibernate.initialize(entry.getValue().getKeyboardInputs());
+			}
+		}
 		
 		Game copiedGame = (Game) deepCopy(game);
 		copiedGame.setGameId(newGameId);
