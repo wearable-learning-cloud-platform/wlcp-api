@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.dto.GameDto;
@@ -35,10 +36,17 @@ public class GameController {
 		return new ResponseEntity<GenericResponse>(new GenericResponse("", returnGames), HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/getGame/{gameId}")
+	@GetMapping("/getGame/{gameId}")
 	public ResponseEntity<Game> getGame(@PathVariable String gameId) {
 		Optional<Game> game = gameRepository.findById(gameId);
 		return new ResponseEntity<Game>(game.isPresent() ? game.get() : null, HttpStatus.OK);
 	}
+	
+	
+	@PostMapping("/createGame")
+	public ResponseEntity<Game> createGame() {
+		return null;
+	}
+	
 
 }

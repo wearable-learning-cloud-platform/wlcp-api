@@ -2,9 +2,9 @@ package org.wlcp.wlcpapi.controller;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,15 +21,13 @@ public class RegistrationController {
 	private UsernameRepository usernameRepository;
 	
 	@PostMapping("/registerUser")
-	public ResponseEntity<Boolean> login(@RequestBody UserRegistrationDto userRegistrationDto) { 
+	public void login(@RequestBody @Valid UserRegistrationDto userRegistrationDto) { 
 		Optional<Username> user = usernameRepository.findById(userRegistrationDto.usernameId);
-		if(!user.isPresent()) {
-			Username username = new Username(userRegistrationDto.usernameId, userRegistrationDto.password, userRegistrationDto.firstName, userRegistrationDto.lastName, "");
-			usernameRepository.save(username);
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+		if(user.isPresent()) {
+			throw new RuntimeException("That username already exists!");
 		}
+		Username username = new Username(userRegistrationDto.usernameId, userRegistrationDto.password, userRegistrationDto.firstName, userRegistrationDto.lastName, "");
+		usernameRepository.save(username);
 	}
 
 }
