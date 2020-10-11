@@ -1,13 +1,17 @@
 package org.wlcp.wlcpapi.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,12 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
 import org.wlcp.wlcpapi.dto.GameDto;
 import org.wlcp.wlcpapi.dto.GenericResponse;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.service.GameService;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 @RequestMapping("/gameController")
@@ -102,6 +109,25 @@ public class GameController {
 		} else {
 			return new ResponseEntity<GenericResponse>(new GenericResponse(message, new String()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@PostMapping(value="/importJSONGame")
+	@Transactional
+	public ResponseEntity<String> importJSONGame(@RequestParam("file") MultipartFile file) throws IOException {
+		
+		gameService.importGame(file);
+		
+		return new ResponseEntity<String>("Import Success!", HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/exportJSONGame", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Transactional
+	public ResponseEntity<String> exportJSONGame(@RequestParam("gameId") String gameId) throws JsonProcessingException {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.add("content-disposition", "attachment; filename=" + gameId + ".wlcpx");
+
+		return new ResponseEntity<String>(gameService.exportGame(gameId), responseHeaders, HttpStatus.OK);
 	}
 	
 }

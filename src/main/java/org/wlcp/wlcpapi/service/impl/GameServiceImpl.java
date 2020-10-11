@@ -2,6 +2,7 @@ package org.wlcp.wlcpapi.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.Username;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
@@ -27,6 +29,9 @@ import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.repository.UsernameRepository;
 import org.wlcp.wlcpapi.service.GameService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Service
 public class GameServiceImpl implements GameService {
 	
@@ -35,6 +40,9 @@ public class GameServiceImpl implements GameService {
 	
 	@Autowired
 	private UsernameRepository usernameRepository;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	@Override
 	public List<GameDto> getPrivateGames(String usernameId) {
@@ -189,6 +197,30 @@ public class GameServiceImpl implements GameService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public void importGame(MultipartFile file) {
+		Game game = null;
+		try {
+			game = objectMapper.readValue(file.getBytes(), Game.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		gameRepository.save(game);
+	}
+
+	@Override
+	public String exportGame(String gameId) {
+		Game game = gameRepository.findById(gameId).get();
+		try {
+			return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(game);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
