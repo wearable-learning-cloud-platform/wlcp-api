@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.hibernate.Hibernate;
@@ -20,18 +22,56 @@ import org.wlcp.wlcpapi.datamodel.master.transition.KeyboardInput;
 import org.wlcp.wlcpapi.datamodel.master.transition.SequenceButtonPress;
 import org.wlcp.wlcpapi.datamodel.master.transition.Transition;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
+import org.wlcp.wlcpapi.dto.GameDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.repository.UsernameRepository;
+import org.wlcp.wlcpapi.service.GameService;
 
 @Service
-public class CopyRenameDeleteGameServiceImpl implements org.wlcp.wlcpapi.service.CopyRenameDeleteGameService {
+public class GameServiceImpl implements GameService {
 	
 	@Autowired
 	private GameRepository gameRepository;
 	
 	@Autowired
 	private UsernameRepository usernameRepository;
+	
+	@Override
+	public List<GameDto> getPrivateGames(String usernameId) {
+		Username username = new Username();
+		username.setUsernameId(usernameId);
+		List<Game> games = gameRepository.findByUsername(username);
+		List<GameDto> returnGames = new ArrayList<GameDto>();
+		for(Game game : games) {
+			if(!game.getDataLog()) {
+				returnGames.add(new GameDto(game.getGameId()));
+			}
+		}
+		return returnGames;
+	}
 
+	@Override
+	public List<GameDto> getPublicGames() {
+		List<Game> games = gameRepository.findAll();
+		List<GameDto> returnGames = new ArrayList<GameDto>();
+		for(Game game : games) {
+			if(game.getVisibility() && !game.getDataLog()) {
+				returnGames.add(new GameDto(game.getGameId()));
+			}
+		}
+		return returnGames;
+	}
+	
+	@Override
+	public Game loadGame(String gameId) {
+		return gameRepository.findById(gameId).get();
+	}
+	
+	@Override
+	public Game saveGame(Game game) {
+		return gameRepository.save(game);
+	}
+	
 	@Override
 	@Transactional
 	public String copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
