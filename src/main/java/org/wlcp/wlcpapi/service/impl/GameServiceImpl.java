@@ -82,39 +82,32 @@ public class GameServiceImpl implements GameService {
 	
 	@Override
 	@Transactional
-	public String copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
-		deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
-		return "";
+	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		return deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
 	}
 
 	@Override
 	@Transactional
-	public String renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+	public Game renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
 		
 		if(game.getUsername().getUsernameId().equals(copyRenameDeleteGameDto.usernameId)) {
-			deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
+			Game copiedGame = deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
 			gameRepository.delete(game);
-			return "";
+			return copiedGame;
 		} else {
-			return "You must own the game to rename it!";
+			return null;
 		}
 	}
 
 	@Override
 	@Transactional
-	public String deleteGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+	public void deleteGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
-		
-		if(game.getUsername().getUsernameId().equals(copyRenameDeleteGameDto.usernameId)) {
-			gameRepository.delete(game);
-			return "";
-		} else {
-			return "You must own the game to delete it!";
-		}	
+		gameRepository.delete(game);	
 	}
 	
-	private void deepCopyGame(String gameId, String newGameId, String usernameId) {
+	private Game deepCopyGame(String gameId, String newGameId, String usernameId) {
 		Game game = gameRepository.findById(gameId).get();
 		Username username = usernameRepository.findById(usernameId).get();
 		
@@ -181,7 +174,7 @@ public class GameServiceImpl implements GameService {
 			}
 		}
 		
-		gameRepository.save(copiedGame);
+		return gameRepository.save(copiedGame);
 		
 	}
 	
@@ -194,8 +187,7 @@ public class GameServiceImpl implements GameService {
 			ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
 			return objInputStream.readObject();
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException("There was an error with the deep copy.");
 		}
 	}
 

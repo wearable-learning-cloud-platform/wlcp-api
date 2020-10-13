@@ -1,6 +1,7 @@
 package org.wlcp.wlcpapi.exception;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpHeaders;
@@ -27,8 +28,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody
-    public ResponseEntity<ErrorResponse> onConstraintValidationException(ConstraintViolationException ex) {
-	    return null;
+    public ResponseEntity<Object> onConstraintValidationException(ConstraintViolationException ex) {
+    	ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "There were constraint violations", ex);
+    	for(ConstraintViolation<?> constraintViolation : ex.getConstraintViolations()) {
+    		errorResponse.getSubErrors().add(new SubErrorResponse(constraintViolation.getPropertyPath() + " " + constraintViolation.getMessage()));
+    	}
+		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 	
 	@Override

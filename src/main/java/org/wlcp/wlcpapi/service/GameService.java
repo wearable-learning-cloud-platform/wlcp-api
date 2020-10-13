@@ -17,11 +17,11 @@ public interface GameService {
 	
 	public Game saveGame(Game game);
 	
-	public String copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
+	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
 	
-	public String renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
+	public Game renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
 	
-	public String deleteGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
+	public void deleteGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
 	
 	public void importGame(MultipartFile file);
 	
