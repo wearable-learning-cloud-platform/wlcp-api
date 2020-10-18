@@ -46,4 +46,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> exception(Exception ex) {
+		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An error occured", ex);
+		errorResponse.getSubErrors().add(new SubErrorResponse(ex.getMessage()));
+		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+	
 }
