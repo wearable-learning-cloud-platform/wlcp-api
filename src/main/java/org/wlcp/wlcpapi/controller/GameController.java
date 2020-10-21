@@ -1,6 +1,7 @@
 package org.wlcp.wlcpapi.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,18 @@ public class GameController {
 	
 	@Autowired
 	private GameService gameService;
+	
+	@GetMapping("/getGames")
+	public ResponseEntity<List<GameDto>> getGames() {
+		List<Game> games = gameRepository.findAll();
+		List<GameDto> returnGames = new ArrayList<GameDto>();
+		for(Game game : games) {
+			if(game.getVisibility() && !game.getDataLog()) {
+				returnGames.add(new GameDto(game.getGameId()));
+			}
+		}
+		return new ResponseEntity<List<GameDto>>(returnGames, HttpStatus.OK);
+	}
 	
 	@GetMapping("/getGame/{gameId}")
 	public ResponseEntity<Game> getGame(@PathVariable String gameId) {
