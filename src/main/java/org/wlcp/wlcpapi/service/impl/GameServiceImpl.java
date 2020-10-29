@@ -2,14 +2,18 @@ package org.wlcp.wlcpapi.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.Username;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
@@ -20,53 +24,90 @@ import org.wlcp.wlcpapi.datamodel.master.transition.KeyboardInput;
 import org.wlcp.wlcpapi.datamodel.master.transition.SequenceButtonPress;
 import org.wlcp.wlcpapi.datamodel.master.transition.Transition;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
+import org.wlcp.wlcpapi.dto.GameDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.repository.UsernameRepository;
+import org.wlcp.wlcpapi.service.GameService;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class CopyRenameDeleteGameServiceImpl implements org.wlcp.wlcpapi.service.CopyRenameDeleteGameService {
+public class GameServiceImpl implements GameService {
 	
 	@Autowired
 	private GameRepository gameRepository;
 	
 	@Autowired
 	private UsernameRepository usernameRepository;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@Override
+	public List<GameDto> getPrivateGames(String usernameId) {
+		Username username = new Username();
+		username.setUsernameId(usernameId);
+		List<Game> games = gameRepository.findByUsername(username);
+		List<GameDto> returnGames = new ArrayList<GameDto>();
+		for(Game game : games) {
+			if(!game.getDataLog()) {
+				returnGames.add(new GameDto(game.getGameId()));
+			}
+		}
+		return returnGames;
+	}
 
 	@Override
+	public List<GameDto> getPublicGames() {
+		List<Game> games = gameRepository.findAll();
+		List<GameDto> returnGames = new ArrayList<GameDto>();
+		for(Game game : games) {
+			if(game.getVisibility() && !game.getDataLog()) {
+				returnGames.add(new GameDto(game.getGameId()));
+			}
+		}
+		return returnGames;
+	}
+	
+	@Override
+	public Game loadGame(String gameId) {
+		return gameRepository.findById(gameId).get();
+	}
+	
+	@Override
+	public Game saveGame(Game game) {
+		return gameRepository.save(game);
+	}
+	
+	@Override
 	@Transactional
-	public String copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
-		deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
-		return "";
+	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		return deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
 	}
 
 	@Override
 	@Transactional
-	public String renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+	public Game renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
 		
 		if(game.getUsername().getUsernameId().equals(copyRenameDeleteGameDto.usernameId)) {
-			deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
+			Game copiedGame = deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
 			gameRepository.delete(game);
-			return "";
+			return copiedGame;
 		} else {
-			return "You must own the game to rename it!";
+			return null;
 		}
 	}
 
 	@Override
 	@Transactional
-	public String deleteGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+	public void deleteGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
-		
-		if(game.getUsername().getUsernameId().equals(copyRenameDeleteGameDto.usernameId)) {
-			gameRepository.delete(game);
-			return "";
-		} else {
-			return "You must own the game to delete it!";
-		}	
+		gameRepository.delete(game);	
 	}
 	
-	private void deepCopyGame(String gameId, String newGameId, String usernameId) {
+	private Game deepCopyGame(String gameId, String newGameId, String usernameId) {
 		Game game = gameRepository.findById(gameId).get();
 		Username username = usernameRepository.findById(usernameId).get();
 		
@@ -133,7 +174,7 @@ public class CopyRenameDeleteGameServiceImpl implements org.wlcp.wlcpapi.service
 			}
 		}
 		
-		gameRepository.save(copiedGame);
+		return gameRepository.save(copiedGame);
 		
 	}
 	
@@ -146,9 +187,32 @@ public class CopyRenameDeleteGameServiceImpl implements org.wlcp.wlcpapi.service
 			ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
 			return objInputStream.readObject();
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException("There was an error with the deep copy.");
 		}
+	}
+
+	@Override
+	public void importGame(MultipartFile file) {
+		Game game = null;
+		try {
+			game = objectMapper.readValue(file.getBytes(), Game.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		gameRepository.save(game);
+	}
+
+	@Override
+	public String exportGame(String gameId) {
+		Game game = gameRepository.findById(gameId).get();
+		try {
+			return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(game);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
