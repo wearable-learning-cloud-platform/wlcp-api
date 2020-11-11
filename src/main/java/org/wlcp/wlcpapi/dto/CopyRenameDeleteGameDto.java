@@ -5,5 +5,6 @@ public class CopyRenameDeleteGameDto {
 	public String usernameId;
 	public String oldGameId;
 	public String newGameId;
+	public Boolean visibility;
 
 }

@@ -83,7 +83,7 @@ public class GameServiceImpl implements GameService {
 	@Override
 	@Transactional
 	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
-		return deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
+		return deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, copyRenameDeleteGameDto.visibility);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class GameServiceImpl implements GameService {
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
 		
 		if(game.getUsername().getUsernameId().equals(copyRenameDeleteGameDto.usernameId)) {
-			Game copiedGame = deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId);
+			Game copiedGame = deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, game.getVisibility());
 			gameRepository.delete(game);
 			return copiedGame;
 		} else {
@@ -107,7 +107,7 @@ public class GameServiceImpl implements GameService {
 		gameRepository.delete(game);	
 	}
 	
-	private Game deepCopyGame(String gameId, String newGameId, String usernameId) {
+	private Game deepCopyGame(String gameId, String newGameId, String usernameId, Boolean visibility) {
 		Game game = gameRepository.findById(gameId).get();
 		Username username = usernameRepository.findById(usernameId).get();
 		
@@ -147,6 +147,7 @@ public class GameServiceImpl implements GameService {
 		Game copiedGame = (Game) deepCopy(game);
 		copiedGame.setGameId(newGameId);
 		copiedGame.setUsername(username);
+		copiedGame.setVisibility(visibility);
 		
 		for(State state : copiedGame.getStates()) {
 			state.setGame(copiedGame);
