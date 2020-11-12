@@ -55,6 +55,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.GET, "/logout").permitAll()
+                .antMatchers(HttpMethod.GET, "/objectStoreController/files/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new GlobalFilterExceptionHandler(), JWTAuthenticationFilter.class)
