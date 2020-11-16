@@ -5,6 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -152,21 +155,21 @@ public class GameServiceImpl implements GameService {
 		for(State state : copiedGame.getStates()) {
 			state.setGame(copiedGame);
 			if(state instanceof StartState) {
-				state.setStateId(state.getStateId().replace(gameId + "_start", newGameId + "_start"));
+				state.setStateId(state.getStateId().replace(md5(gameId) + "_start", md5(newGameId) + "_start"));
 			} else if(state instanceof OutputState) {
-				state.setStateId(state.getStateId().replace(gameId +  "_state_", newGameId +  "_state_"));
+				state.setStateId(state.getStateId().replace(md5(gameId) +  "_state_", md5(newGameId) +  "_state_"));
 			}
 			
 		}
 		
 		for(Connection connection : copiedGame.getConnections()) {
 			connection.setGame(copiedGame);
-			connection.setConnectionId(connection.getConnectionId().replace(gameId +  "_connection_", newGameId +  "_connection_"));
+			connection.setConnectionId(connection.getConnectionId().replace(md5(gameId) +  "_connection_", md5(newGameId) +  "_connection_"));
 		}
 		
 		for(Transition transition : copiedGame.getTransitions()) {
 			transition.setGame(copiedGame);
-			transition.setTransitionId(transition.getTransitionId().replace(gameId +  "_transition_", newGameId +  "_transition_"));
+			transition.setTransitionId(transition.getTransitionId().replace(md5(gameId) +  "_transition_", md5(newGameId) +  "_transition_"));
 			for(Entry<String, SequenceButtonPress> entry : transition.getSequenceButtonPresses().entrySet()) {
 				entry.getValue().setSequenceButtonPressId(transition.getTransitionId() + "_" + entry.getValue().getScope().toLowerCase().replace(" ", "_"));
 			}
@@ -190,6 +193,26 @@ public class GameServiceImpl implements GameService {
 		} catch (Exception e) {
 			throw new RuntimeException("There was an error with the deep copy.");
 		}
+	}
+	
+	private static String md5(String input) {
+		MessageDigest m = null;
+		try {
+			m = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		m.reset();
+		m.update(input.getBytes());
+		byte[] digest = m.digest();
+		BigInteger bigInt = new BigInteger(1,digest);
+		String hashtext = bigInt.toString(16);
+		// Now we need to zero pad it if you actually want the full 32 chars.
+		while(hashtext.length() < 32 ){
+		  hashtext = "0"+hashtext;
+		}
+		return hashtext;
 	}
 
 	@Override
