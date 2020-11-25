@@ -46,18 +46,24 @@ public class OutputState extends State implements Serializable {
     @CollectionTable(name = "SOUND_OUTPUT")
     @MapKeyColumn(name = "SCOPE")
 	private Map<String, SoundOutput> soundOutputs = new HashMap<String, SoundOutput>();
+	
+	@ElementCollection()
+    @CollectionTable(name = "VIDEO_OUTPUT")
+    @MapKeyColumn(name = "SCOPE")
+	private Map<String, VideoOutput> videoOutputs = new HashMap<String, VideoOutput>();
 
 	public OutputState() {
 		super();
 		setStateType(StateType.OUTPUT_STATE);
 	}
 	
-	public OutputState(String stateId, Game game, StateType stateType, Float positionX, Float positionY, List<Connection> inputConnections, List<Connection> outputConnections, String description, Map<String, String> displayText, Map<String, PictureOutput> pictureOutputs, Map<String, SoundOutput> soundOutputs) {
+	public OutputState(String stateId, Game game, StateType stateType, Float positionX, Float positionY, List<Connection> inputConnections, List<Connection> outputConnections, String description, Map<String, String> displayText, Map<String, PictureOutput> pictureOutputs, Map<String, SoundOutput> soundOutputs, Map<String, VideoOutput> videoOutputs) {
 		super(stateId, game, stateType, positionX, positionY, inputConnections, outputConnections);
 		this.description = description;
 		this.displayText = displayText;
 		this.pictureOutputs = pictureOutputs;
 		this.soundOutputs = soundOutputs;
+		this.videoOutputs = videoOutputs;
 	}
 
 	public String getDescription() {
@@ -90,6 +96,14 @@ public class OutputState extends State implements Serializable {
 
 	public void setSoundOutputs(Map<String, SoundOutput> soundOutputs) {
 		this.soundOutputs = soundOutputs;
+	}
+
+	public Map<String, VideoOutput> getVideoOutputs() {
+		return videoOutputs;
+	}
+
+	public void setVideoOutputs(Map<String, VideoOutput> videoOutputs) {
+		this.videoOutputs = videoOutputs;
 	}
 
 }

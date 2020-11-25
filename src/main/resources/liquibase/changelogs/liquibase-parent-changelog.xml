@@ -7,4 +7,5 @@
 	<include file="liquibase/changelogs/liquibase-child-changelog-1.xml" />
 	<include file="liquibase/changelogs/liquibase-child-changelog-2.xml" />
 	<include file="liquibase/changelogs/liquibase-child-changelog-3.xml" />
+	<include file="liquibase/changelogs/liquibase-child-changelog-4.xml" />
 </databaseChangeLog>
