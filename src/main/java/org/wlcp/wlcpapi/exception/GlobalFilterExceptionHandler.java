@@ -21,11 +21,15 @@ public class GlobalFilterExceptionHandler extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 		} catch (Exception ex) {
-			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			response.setContentType("application/json");
-			response.getWriter().write(new ObjectMapper().writeValueAsString(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getCause().getMessage(), ex)));
+			if(ex.getCause() == null) {
+				response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+				response.setContentType("application/json");
+				response.getWriter().write(new ObjectMapper().writeValueAsString(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex)));
+			} else {
+				response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+				response.setContentType("application/json");
+				response.getWriter().write(new ObjectMapper().writeValueAsString(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getCause().getMessage(), ex)));
+			}
 		}
-
 	}
-
 }
