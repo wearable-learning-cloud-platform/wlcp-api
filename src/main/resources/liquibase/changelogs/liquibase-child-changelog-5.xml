@@ -1,0 +1,56 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="Matt (generated)" id="1607976682688-1">
+        <createTable tableName="global_variable">
+            <column name="start_state_state_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="default_value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="type" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1607976682688-2">
+        <createTable tableName="global_variable_output">
+            <column name="global_variable_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="scope" type="VARCHAR(255)"/>
+            <column name="output_state_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1607976682688-3">
+        <createTable tableName="variable_modifiers">
+            <column name="global_variable_output_global_variable_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="operator" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="variable_name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1607976682688-4">
+        <createIndex indexName="FKk6gvkfwm5319v7sx5fkpgl28p" tableName="global_variable">
+            <column name="start_state_state_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1607976682688-5">
+        <createIndex indexName="FKpc0s20lsftn50ge5v33ssd349" tableName="global_variable_output">
+            <column name="output_state_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1607976682688-6">
+        <createIndex indexName="FKq0d76qmdm439docdh9gxxf8ir" tableName="variable_modifiers">
+            <column name="global_variable_output_global_variable_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1607976682688-7">
+        <addForeignKeyConstraint baseColumnNames="start_state_state_id" baseTableName="global_variable" constraintName="FKk6gvkfwm5319v7sx5fkpgl28p" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="start_state" validate="true"/>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1607976682688-8">
+        <addForeignKeyConstraint baseColumnNames="output_state_id" baseTableName="global_variable_output" constraintName="FKpc0s20lsftn50ge5v33ssd349" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="state_id" referencedTableName="output_state" validate="true"/>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1607976682688-9">
+        <addForeignKeyConstraint baseColumnNames="global_variable_output_global_variable_id" baseTableName="variable_modifiers" constraintName="FKq0d76qmdm439docdh9gxxf8ir" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="global_variable_id" referencedTableName="global_variable_output" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

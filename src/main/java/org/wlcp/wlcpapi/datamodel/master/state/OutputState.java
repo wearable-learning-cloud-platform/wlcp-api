@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.MapKey;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -51,19 +54,24 @@ public class OutputState extends State implements Serializable {
     @CollectionTable(name = "VIDEO_OUTPUT")
     @MapKeyColumn(name = "SCOPE")
 	private Map<String, VideoOutput> videoOutputs = new HashMap<String, VideoOutput>();
+	
+	@OneToMany(mappedBy="outputState", orphanRemoval = true, cascade = CascadeType.ALL)
+	@MapKey(name = "scope")
+	private Map<String, GlobalVariableOutput> globalVariables = new HashMap<String, GlobalVariableOutput>();
 
 	public OutputState() {
 		super();
 		setStateType(StateType.OUTPUT_STATE);
 	}
 	
-	public OutputState(String stateId, Game game, StateType stateType, Float positionX, Float positionY, List<Connection> inputConnections, List<Connection> outputConnections, String description, Map<String, String> displayText, Map<String, PictureOutput> pictureOutputs, Map<String, SoundOutput> soundOutputs, Map<String, VideoOutput> videoOutputs) {
+	public OutputState(String stateId, Game game, StateType stateType, Float positionX, Float positionY, List<Connection> inputConnections, List<Connection> outputConnections, String description, Map<String, String> displayText, Map<String, PictureOutput> pictureOutputs, Map<String, SoundOutput> soundOutputs, Map<String, VideoOutput> videoOutputs, Map<String, GlobalVariableOutput> globalVariables) {
 		super(stateId, game, stateType, positionX, positionY, inputConnections, outputConnections);
 		this.description = description;
 		this.displayText = displayText;
 		this.pictureOutputs = pictureOutputs;
 		this.soundOutputs = soundOutputs;
 		this.videoOutputs = videoOutputs;
+		this.globalVariables = globalVariables;
 	}
 
 	public String getDescription() {
@@ -104,6 +112,14 @@ public class OutputState extends State implements Serializable {
 
 	public void setVideoOutputs(Map<String, VideoOutput> videoOutputs) {
 		this.videoOutputs = videoOutputs;
+	}
+
+	public Map<String, GlobalVariableOutput> getGlobalVariables() {
+		return globalVariables;
+	}
+
+	public void setGlobalVariables(Map<String, GlobalVariableOutput> globalVariables) {
+		this.globalVariables = globalVariables;
 	}
 
 }
