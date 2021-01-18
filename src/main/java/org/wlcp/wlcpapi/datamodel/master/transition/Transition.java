@@ -20,6 +20,7 @@ import javax.persistence.Table;
 
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
+import org.wlcp.wlcpapi.datamodel.master.state.GlobalVariableOutput;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -65,6 +66,10 @@ public class Transition implements Serializable {
 	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL)
 	@MapKey(name = "scope")
 	private Map<String, KeyboardInput> keyboardInputs = new HashMap<String, KeyboardInput>();
+	
+	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL)
+	@MapKey(name = "scope")
+	private Map<String, GlobalVariableInput> globalVariables = new HashMap<String, GlobalVariableInput>();
 
 	public Transition() {
 		super();
@@ -73,7 +78,8 @@ public class Transition implements Serializable {
 	public Transition(String transitionId, Game game, Connection connection, Map<String, String> activeTransitions,
 			Map<String, SingleButtonPress> singleButtonPresses,
 			Map<String, SequenceButtonPress> sequenceButtonPresses,
-			Map<String, KeyboardInput> keyboardInputs) {
+			Map<String, KeyboardInput> keyboardInputs,
+			Map<String, GlobalVariableInput> globalVariables) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
@@ -82,6 +88,7 @@ public class Transition implements Serializable {
 		this.singleButtonPresses = singleButtonPresses;
 		this.sequenceButtonPresses = sequenceButtonPresses;
 		this.keyboardInputs = keyboardInputs;
+		this.globalVariables = globalVariables;
 	}
 
 	public String getTransitionId() {
@@ -138,6 +145,14 @@ public class Transition implements Serializable {
 
 	public void setKeyboardInputs(Map<String, KeyboardInput> keyboardInputs) {
 		this.keyboardInputs = keyboardInputs;
+	}
+
+	public Map<String, GlobalVariableInput> getGlobalVariables() {
+		return globalVariables;
+	}
+
+	public void setGlobalVariables(Map<String, GlobalVariableInput> globalVariables) {
+		this.globalVariables = globalVariables;
 	}
 
 }

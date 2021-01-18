@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="Matt (generated)" id="1611009032662-1">
+        <createTable tableName="global_variable_input">
+            <column name="global_variable_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="scope" type="VARCHAR(255)"/>
+            <column name="transition_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1611009032662-2">
+        <createTable tableName="global_variable_input_modifiers">
+            <column name="global_variable_input_global_variable_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="logical_operator" type="VARCHAR(255)"/>
+            <column name="operator" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="variable_name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1611009032662-3">
+        <createIndex indexName="FK1jl833gpejm1nsh08492k2pwd" tableName="global_variable_input_modifiers">
+            <column name="global_variable_input_global_variable_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1611009032662-4">
+        <createIndex indexName="FKik7xwd3kxecmh2v4yucy78nyd" tableName="global_variable_input">
+            <column name="transition_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1611009032662-5">
+        <addForeignKeyConstraint baseColumnNames="global_variable_input_global_variable_id" baseTableName="global_variable_input_modifiers" constraintName="FK1jl833gpejm1nsh08492k2pwd" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="global_variable_id" referencedTableName="global_variable_input" validate="true"/>
+    </changeSet>
+    <changeSet author="Matt (generated)" id="1611009032662-6">
+        <addForeignKeyConstraint baseColumnNames="transition_id" baseTableName="global_variable_input" constraintName="FKik7xwd3kxecmh2v4yucy78nyd" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="transition_id" referencedTableName="transition" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
