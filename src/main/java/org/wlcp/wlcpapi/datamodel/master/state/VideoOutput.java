@@ -1,10 +1,14 @@
 package org.wlcp.wlcpapi.datamodel.master.state;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class VideoOutput {
+public class VideoOutput implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	@Column(name = "URL")
 	private String url;

@@ -126,6 +126,8 @@ public class GameServiceImpl implements GameService {
 			if(state instanceof OutputState) {
 				Hibernate.initialize(((OutputState) state).getDisplayText());
 				Hibernate.initialize(((OutputState) state).getPictureOutputs());
+				Hibernate.initialize(((OutputState) state).getSoundOutputs());
+				Hibernate.initialize(((OutputState) state).getVideoOutputs());
 			}
 		}
 		
