@@ -62,12 +62,12 @@ public class State implements Serializable {
 	private Float positionY;
 	
 	@JoinTable(name = "INPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
 	@JsonIdentityReference(alwaysAsId = true)
 	List<Connection> inputConnections = new ArrayList<Connection>();
 	
 	@JoinTable(name = "OUTPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
 	@JsonIdentityReference(alwaysAsId = true)
 	List<Connection> outputConnections = new ArrayList<Connection>();
 
