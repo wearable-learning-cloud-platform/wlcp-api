@@ -65,6 +65,11 @@ public class Transition implements Serializable {
 	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL)
 	@MapKey(name = "scope")
 	private Map<String, KeyboardInput> keyboardInputs = new HashMap<String, KeyboardInput>();
+	
+	@ElementCollection()
+	@CollectionTable(name = "TIMER_DURATION")
+	@MapKeyColumn(name = "SCOPE")
+	private Map<String, TimerDuration> timerDurations = new HashMap<String, TimerDuration>();
 
 	public Transition() {
 		super();
@@ -73,7 +78,8 @@ public class Transition implements Serializable {
 	public Transition(String transitionId, Game game, Connection connection, Map<String, String> activeTransitions,
 			Map<String, SingleButtonPress> singleButtonPresses,
 			Map<String, SequenceButtonPress> sequenceButtonPresses,
-			Map<String, KeyboardInput> keyboardInputs) {
+			Map<String, KeyboardInput> keyboardInputs,
+			Map<String, TimerDuration> timerDurations) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
@@ -82,6 +88,7 @@ public class Transition implements Serializable {
 		this.singleButtonPresses = singleButtonPresses;
 		this.sequenceButtonPresses = sequenceButtonPresses;
 		this.keyboardInputs = keyboardInputs;
+		this.timerDurations = timerDurations;
 	}
 
 	public String getTransitionId() {
@@ -138,6 +145,14 @@ public class Transition implements Serializable {
 
 	public void setKeyboardInputs(Map<String, KeyboardInput> keyboardInputs) {
 		this.keyboardInputs = keyboardInputs;
+	}
+
+	public Map<String, TimerDuration> getTimerDurations() {
+		return timerDurations;
+	}
+
+	public void setTimerDurations(Map<String, TimerDuration> timerDurations) {
+		this.timerDurations = timerDurations;
 	}
 
 }
