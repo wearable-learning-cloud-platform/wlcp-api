@@ -3,6 +3,7 @@ package org.wlcp.wlcpapi.datamodel.master.transition;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -70,6 +71,11 @@ public class Transition implements Serializable {
 	@CollectionTable(name = "TIMER_DURATION")
 	@MapKeyColumn(name = "SCOPE")
 	private Map<String, TimerDuration> timerDurations = new HashMap<String, TimerDuration>();
+	
+	@ElementCollection()
+	@CollectionTable(name = "RANDOM")
+	@MapKeyColumn(name = "SCOPE")
+	private Map<String, Randoms> randoms = new HashMap<String, Randoms>();
 
 	public Transition() {
 		super();
@@ -79,7 +85,8 @@ public class Transition implements Serializable {
 			Map<String, SingleButtonPress> singleButtonPresses,
 			Map<String, SequenceButtonPress> sequenceButtonPresses,
 			Map<String, KeyboardInput> keyboardInputs,
-			Map<String, TimerDuration> timerDurations) {
+			Map<String, TimerDuration> timerDurations,
+			Map<String, Randoms> randoms) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
@@ -89,6 +96,7 @@ public class Transition implements Serializable {
 		this.sequenceButtonPresses = sequenceButtonPresses;
 		this.keyboardInputs = keyboardInputs;
 		this.timerDurations = timerDurations;
+		this.randoms = randoms;
 	}
 
 	public String getTransitionId() {
@@ -153,6 +161,14 @@ public class Transition implements Serializable {
 
 	public void setTimerDurations(Map<String, TimerDuration> timerDurations) {
 		this.timerDurations = timerDurations;
+	}
+
+	public Map<String, Randoms> getRandoms() {
+		return randoms;
+	}
+
+	public void setRandoms(Map<String, Randoms> randoms) {
+		this.randoms = randoms;
 	}
 
 }
