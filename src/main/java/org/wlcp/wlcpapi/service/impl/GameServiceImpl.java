@@ -80,7 +80,16 @@ public class GameServiceImpl implements GameService {
 	
 	@Override
 	public Game saveGame(Game game) {
-		return gameRepository.save(game);
+		if(game.getStates().size() == 0 && game.getConnections().size() == 0 && game.getTransitions().size() == 0) {
+			if(!gameRepository.findById(game.getGameId()).isPresent()) {
+				return gameRepository.save(game);
+			} else {
+				//Create new already exists
+				throw new RuntimeException("Game Already Exists!");
+			}
+		} else {
+			return gameRepository.save(game);	
+		}
 	}
 	
 	@Override
@@ -180,7 +189,12 @@ public class GameServiceImpl implements GameService {
 			}
 		}
 		
-		return gameRepository.save(copiedGame);
+		if(!gameRepository.findById(newGameId).isPresent()) {
+			return gameRepository.save(copiedGame);
+		} else {
+			//Create new already exists
+			throw new RuntimeException("Game Already Exists!");
+		}
 		
 	}
 	
