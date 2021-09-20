@@ -5,12 +5,15 @@ import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.state.State;
 import org.wlcp.wlcpapi.datamodel.master.transition.Transition;
@@ -41,11 +44,13 @@ public class Connection implements Serializable {
 	@JoinColumn(name = "GAME")
 	private Game game;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	@JoinColumn(name = "CONNECTION_FROM")
 	private State connectionFrom;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	@JoinColumn(name = "CONNECTION_TO")
 	private State connectionTo;
 	

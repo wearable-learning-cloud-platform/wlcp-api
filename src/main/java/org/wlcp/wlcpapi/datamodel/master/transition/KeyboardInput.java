@@ -8,10 +8,14 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * Entity implementation class for Entity: KeyboardInput
@@ -35,9 +39,10 @@ public class KeyboardInput implements Serializable {
 	@Column(name = "SCOPE")
 	private String scope;
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name="KEYBOARD_INPUTS", joinColumns=@JoinColumn(name="KEYBOARD_INPUT_ID"))
 	@Column(name="KEYBOARD_INPUT")
+	@Fetch(FetchMode.SELECT)
 	private List<String> keyboardInputs = new ArrayList<String>();
 
 	public KeyboardInput() {
