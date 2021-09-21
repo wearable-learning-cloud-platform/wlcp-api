@@ -107,7 +107,8 @@ public class TestGameServiceImpl {
 		copyRenameDeleteGameDto.oldGameId = "gameId";
 		copyRenameDeleteGameDto.usernameId = "";
 		copyRenameDeleteGameDto.visibility = true;
-		when(gameRepository.findById(any(String.class))).thenReturn(Optional.of(createAdvanceTestGame()));
+		when(gameRepository.findById(copyRenameDeleteGameDto.oldGameId)).thenReturn(Optional.of(createAdvanceTestGame()));
+		when(gameRepository.findById(copyRenameDeleteGameDto.newGameId)).thenReturn(Optional.empty());
 		when(usernameRepository.findById(any(String.class))).thenReturn(Optional.of(new Username()));
 		gameService.copyGame(copyRenameDeleteGameDto);
 	}
@@ -119,7 +120,8 @@ public class TestGameServiceImpl {
 		copyRenameDeleteGameDto.oldGameId = "gameId";
 		copyRenameDeleteGameDto.usernameId = "";
 		copyRenameDeleteGameDto.visibility = true;
-		when(gameRepository.findById(any(String.class))).thenReturn(Optional.of(createAdvanceTestGame()));
+		when(gameRepository.findById(copyRenameDeleteGameDto.oldGameId)).thenReturn(Optional.of(createAdvanceTestGame()));
+		when(gameRepository.findById(copyRenameDeleteGameDto.newGameId)).thenReturn(Optional.empty());
 		when(usernameRepository.findById(any(String.class))).thenReturn(Optional.of(new Username()));
 		gameService.renameGame(copyRenameDeleteGameDto);
 	}
