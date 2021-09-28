@@ -1,13 +1,9 @@
 package org.wlcp.wlcpapi.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import static org.wlcp.wlcpapi.helper.HelperMethods.deepCopy;
+import static org.wlcp.wlcpapi.helper.HelperMethods.md5;
+
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -17,7 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
+import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
+import org.wlcp.wlcpapi.archive.repository.ArchiveUsernameRepository;
 import org.wlcp.wlcpapi.datamodel.master.Game;
+import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.datamodel.master.Username;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
 import org.wlcp.wlcpapi.datamodel.master.state.OutputState;
@@ -28,6 +28,7 @@ import org.wlcp.wlcpapi.datamodel.master.transition.SequenceButtonPress;
 import org.wlcp.wlcpapi.datamodel.master.transition.Transition;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
 import org.wlcp.wlcpapi.dto.GameDto;
+import org.wlcp.wlcpapi.dto.SaveDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.repository.UsernameRepository;
 import org.wlcp.wlcpapi.service.GameService;
@@ -43,6 +44,15 @@ public class GameServiceImpl implements GameService {
 	
 	@Autowired
 	private UsernameRepository usernameRepository;
+	
+	@Autowired
+	private GameSaveRepository gameSaveRepository;
+	
+	@Autowired
+	private ArchiveGameRepository archiveGameRepository;
+	
+	@Autowired
+	private ArchiveUsernameRepository archiveUsernameRepository;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -79,17 +89,42 @@ public class GameServiceImpl implements GameService {
 	}
 	
 	@Override
-	public Game saveGame(Game game) {
-		if(game.getStates().size() == 0 && game.getConnections().size() == 0 && game.getTransitions().size() == 0) {
-			if(!gameRepository.findById(game.getGameId()).isPresent()) {
-				return gameRepository.save(game);
+	@Transactional("archiveTransactionManager")
+	public Game loadGameVersion(String gameId, String version) {
+		GameSave gameSave = gameSaveRepository.findByMasterGameIdAndVersion(gameId, Integer.valueOf(version));
+		Game game = archiveGameRepository.findById(gameSave.getReferenceGameId()).get();
+		Hibernate.initialize(game.getStates());
+		Hibernate.initialize(game.getConnections());
+		Hibernate.initialize(game.getTransitions());
+		return game;
+	}
+	
+	@Override
+	public Game saveGame(SaveDto saveDto) {
+		if(saveDto.game.getStates().size() == 0 && saveDto.game.getConnections().size() == 0 && saveDto.game.getTransitions().size() == 0) {
+			if(!gameRepository.findById(saveDto.game.getGameId()).isPresent()) {
+				Game game = gameRepository.save(saveDto.game);
+				archiveGame(saveDto);
+				return game;
 			} else {
 				//Create new already exists
 				throw new RuntimeException("Game Already Exists!");
 			}
 		} else {
-			return gameRepository.save(game);	
+			Game game = gameRepository.save(saveDto.game);
+			archiveGame(saveDto);
+			return game;
 		}
+	}
+	
+	@Transactional("archiveTransactionManager")
+	private void archiveGame(SaveDto saveDto) {
+		int version = gameSaveRepository.max(saveDto.game.getGameId()) == null ? 0 : gameSaveRepository.max(saveDto.game.getGameId()) + 1;
+		GameSave gameSave = new GameSave(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + version, saveDto.gameSave.getType(), version, saveDto.gameSave.getDescription());
+		gameSave = gameSaveRepository.save(gameSave);
+		if(!archiveUsernameRepository.existsById(saveDto.game.getUsername().getUsernameId())) { archiveUsernameRepository.save(saveDto.game.getUsername()); }
+		Game copiedGame = deepCopyWithoutSave(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + gameSave.getVersion(), saveDto.game.getUsername().getUsernameId(), saveDto.game.getVisibility());
+		archiveGameRepository.save(copiedGame);
 	}
 	
 	@Override
@@ -119,7 +154,11 @@ public class GameServiceImpl implements GameService {
 		gameRepository.delete(game);	
 	}
 	
-	public Game deepCopyGame(String gameId, String newGameId, String usernameId, Boolean visibility) {
+	public Game deepCopyGame(String gameId, String newGameId, String usernameId, Boolean visibility) {		
+		return gameRepository.save(deepCopyWithoutSave(gameId, newGameId, usernameId, visibility));
+	}
+	
+	public Game deepCopyWithoutSave(String gameId, String newGameId, String usernameId, Boolean visibility) {
 		Game game = gameRepository.findById(gameId).get();
 		
 		Hibernate.initialize(game.getStates());
@@ -130,7 +169,7 @@ public class GameServiceImpl implements GameService {
 		
 		Game copiedGame = deepCopyGame(gameId, newGameId, username, visibility, game);
 		
-		return gameRepository.save(copiedGame);
+		return copiedGame;
 	}
 	
 	public Game deepCopyGame(String gameId, String newGameId, Username username, Boolean visibility, Game game) {
@@ -165,39 +204,6 @@ public class GameServiceImpl implements GameService {
 			}
 		}
 		return copiedGame;
-	}
-	
-	private static Object deepCopy(Object object) {
-		try {
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			ObjectOutputStream outputStrm = new ObjectOutputStream(outputStream);
-			outputStrm.writeObject(object);
-			ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-			ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
-			return objInputStream.readObject();
-		} catch (Exception e) {
-			throw new RuntimeException("There was an error with the deep copy.");
-		}
-	}
-	
-	private static String md5(String input) {
-		MessageDigest m = null;
-		try {
-			m = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		m.reset();
-		m.update(input.getBytes());
-		byte[] digest = m.digest();
-		BigInteger bigInt = new BigInteger(1,digest);
-		String hashtext = bigInt.toString(16);
-		// Now we need to zero pad it if you actually want the full 32 chars.
-		while(hashtext.length() < 32 ){
-		  hashtext = "0"+hashtext;
-		}
-		return hashtext;
 	}
 
 	@Override

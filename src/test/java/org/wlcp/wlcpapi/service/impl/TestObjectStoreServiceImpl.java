@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.wlcp.wlcpapi.datamodel.master.ObjectStore;
 import org.wlcp.wlcpapi.repository.ObjectStoreRepository;
@@ -20,6 +21,7 @@ import org.wlcp.wlcpapi.repository.ObjectStoreRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles({ "test" })
 public class TestObjectStoreServiceImpl {
 	
 	@InjectMocks

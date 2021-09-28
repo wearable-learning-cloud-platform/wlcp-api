@@ -24,9 +24,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
+import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
+import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
 import org.wlcp.wlcpapi.dto.GameDto;
+import org.wlcp.wlcpapi.dto.SaveDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.service.GameService;
 
@@ -42,6 +46,9 @@ public class GameController {
 	
 	@Autowired
 	private GameService gameService;
+	
+	@Autowired
+	private GameSaveRepository gameSaveRepository;
 	
 	@GetMapping("/getGames")
 	public ResponseEntity<List<GameDto>> getGames() {
@@ -73,16 +80,28 @@ public class GameController {
 		return new ResponseEntity<List<GameDto>>(gameService.getPublicGames(), HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/getGameHistory")
+    @ResponseBody()
+	public ResponseEntity<List<GameSave>> getGameHistory(@RequestParam("gameId") @Valid @NotBlank String gameId, @RequestParam("saveType") SaveType saveType) {
+		return new ResponseEntity<List<GameSave>>(gameSaveRepository.findByMasterGameIdAndType(gameId, saveType), HttpStatus.OK);
+	}
+	
 	@GetMapping(value="/loadGame")
     @ResponseBody()
 	public ResponseEntity<Game> loadGame(@RequestParam("gameId") @Valid @NotBlank String gameId) {
 		return new ResponseEntity<Game>(gameService.loadGame(gameId), HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/loadGameVersion")
+    @ResponseBody()
+	public ResponseEntity<Game> loadGameVersion(@RequestParam("gameId") @Valid @NotBlank String gameId, @RequestParam("version") @Valid @NotBlank String version) {
+		return new ResponseEntity<Game>(gameService.loadGameVersion(gameId, version), HttpStatus.OK);
+	}
+	
 	@PostMapping(value="/saveGame")
 	@ResponseBody
-	public ResponseEntity<Game> saveGame(@RequestBody Game game) { 
-		return new ResponseEntity<Game>(gameService.saveGame(game), HttpStatus.OK);
+	public ResponseEntity<Game> saveGame(@RequestBody SaveDto saveDto) {
+		return new ResponseEntity<Game>(gameService.saveGame(saveDto), HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/copyGame")

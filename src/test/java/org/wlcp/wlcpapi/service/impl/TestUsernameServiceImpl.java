@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.wlcp.wlcpapi.datamodel.master.Username;
 import org.wlcp.wlcpapi.dto.UserRegistrationDto;
@@ -21,6 +22,7 @@ import org.wlcp.wlcpapi.repository.UsernameRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles({ "test" })
 public class TestUsernameServiceImpl {
 
 	@InjectMocks
