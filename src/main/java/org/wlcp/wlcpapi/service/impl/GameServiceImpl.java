@@ -5,6 +5,8 @@ import static org.wlcp.wlcpapi.helper.HelperMethods.md5;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -120,11 +122,12 @@ public class GameServiceImpl implements GameService {
 	
 	@Transactional("archiveTransactionManager")
 	private void archiveGame(SaveDto saveDto) {
-		int version = gameSaveRepository.max(saveDto.game.getGameId(), saveDto.gameSave.getType()) == null ? 0 : gameSaveRepository.max(saveDto.game.getGameId(), saveDto.gameSave.getType()) + 1;
-		GameSave gameSave = new GameSave(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + version, saveDto.gameSave.getType(), version, saveDto.gameSave.getDescription());
+		int version = gameSaveRepository.maxMasterGameIdAndSaveType(saveDto.game.getGameId(), saveDto.gameSave.getType()) == null ? 0 : gameSaveRepository.maxMasterGameIdAndSaveType(saveDto.game.getGameId(), saveDto.gameSave.getType()) + 1;
+		int referenceId = gameSaveRepository.findByMasterGameId(saveDto.game.getGameId()).size() == 0 ? 0 : gameSaveRepository.findByMasterGameId(saveDto.game.getGameId()).size();
+		GameSave gameSave = new GameSave(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + referenceId, saveDto.gameSave.getType(), version, saveDto.gameSave.getDescription());
 		gameSave = gameSaveRepository.save(gameSave);
 		if(!archiveUsernameRepository.existsById(saveDto.game.getUsername().getUsernameId())) { archiveUsernameRepository.save(saveDto.game.getUsername()); }
-		Game copiedGame = deepCopyWithoutSave(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + gameSave.getVersion(), saveDto.game.getUsername().getUsernameId(), saveDto.game.getVisibility());
+		Game copiedGame = deepCopyWithoutSave(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + referenceId, saveDto.game.getUsername().getUsernameId(), saveDto.game.getVisibility());
 		archiveGameRepository.save(copiedGame);
 	}
 	
@@ -152,7 +155,18 @@ public class GameServiceImpl implements GameService {
 	@Transactional
 	public void deleteGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
+		deleteArchivedGames(game.getGameId());
 		gameRepository.delete(game);	
+	}
+	
+	private void deleteArchivedGames(String gameId) {
+		List<GameSave> test = gameSaveRepository.findByMasterGameId(gameId);
+		Collections.reverse(test);
+		for(GameSave gameSave : test) {
+			archiveGameRepository.deleteById(gameSave.getReferenceGameId());
+			gameSaveRepository.delete(gameSave);
+		}
+
 	}
 	
 	public Game deepCopyGame(String gameId, String newGameId, String usernameId, Boolean visibility) {		
