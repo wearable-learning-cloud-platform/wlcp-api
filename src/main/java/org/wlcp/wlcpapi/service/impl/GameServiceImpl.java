@@ -114,7 +114,10 @@ public class GameServiceImpl implements GameService {
 				throw new RuntimeException("Game Already Exists!");
 			}
 		} else {
-			Game game = gameRepository.save(saveDto.game);
+			Game game = null;
+			if(saveDto.gameSave.getType().equals(SaveType.MANUAL)) {
+				game = gameRepository.save(saveDto.game);
+			}
 			archiveGame(saveDto);
 			return game;
 		}
