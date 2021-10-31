@@ -94,8 +94,8 @@ public class GameController {
 	
 	@GetMapping(value="/loadGameVersion")
     @ResponseBody()
-	public ResponseEntity<Game> loadGameVersion(@RequestParam("gameId") @Valid @NotBlank String gameId, @RequestParam("version") @Valid @NotBlank String version) {
-		return new ResponseEntity<Game>(gameService.loadGameVersion(gameId, version), HttpStatus.OK);
+	public ResponseEntity<Game> loadGameVersion(@RequestParam("gameId") @Valid @NotBlank String gameId, @RequestParam("saveType") SaveType saveType, @RequestParam("version") @Valid @NotBlank String version) {
+		return new ResponseEntity<Game>(gameService.loadGameVersion(gameId, saveType, version), HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/saveGame")

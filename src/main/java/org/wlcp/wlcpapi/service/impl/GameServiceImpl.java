@@ -13,9 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
 import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
 import org.wlcp.wlcpapi.archive.repository.ArchiveUsernameRepository;
+import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
+import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.datamodel.master.Username;
@@ -90,8 +91,8 @@ public class GameServiceImpl implements GameService {
 	
 	@Override
 	@Transactional("archiveTransactionManager")
-	public Game loadGameVersion(String gameId, String version) {
-		GameSave gameSave = gameSaveRepository.findByMasterGameIdAndVersion(gameId, Integer.valueOf(version));
+	public Game loadGameVersion(String gameId, SaveType saveType, String version) {
+		GameSave gameSave = gameSaveRepository.findByMasterGameIdAndVersionAndType(gameId, Integer.valueOf(version), saveType);
 		Game game = archiveGameRepository.findById(gameSave.getReferenceGameId()).get();
 		Hibernate.initialize(game.getStates());
 		Hibernate.initialize(game.getConnections());
@@ -119,7 +120,7 @@ public class GameServiceImpl implements GameService {
 	
 	@Transactional("archiveTransactionManager")
 	private void archiveGame(SaveDto saveDto) {
-		int version = gameSaveRepository.max(saveDto.game.getGameId()) == null ? 0 : gameSaveRepository.max(saveDto.game.getGameId()) + 1;
+		int version = gameSaveRepository.max(saveDto.game.getGameId(), saveDto.gameSave.getType()) == null ? 0 : gameSaveRepository.max(saveDto.game.getGameId(), saveDto.gameSave.getType()) + 1;
 		GameSave gameSave = new GameSave(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + version, saveDto.gameSave.getType(), version, saveDto.gameSave.getDescription());
 		gameSave = gameSaveRepository.save(gameSave);
 		if(!archiveUsernameRepository.existsById(saveDto.game.getUsername().getUsernameId())) { archiveUsernameRepository.save(saveDto.game.getUsername()); }

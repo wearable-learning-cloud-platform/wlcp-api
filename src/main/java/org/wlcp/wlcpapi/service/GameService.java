@@ -3,6 +3,7 @@ package org.wlcp.wlcpapi.service;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
 import org.wlcp.wlcpapi.dto.GameDto;
@@ -16,7 +17,7 @@ public interface GameService {
 	
 	public Game loadGame(String gameId);
 	
-	public Game loadGameVersion(String gameId, String version);
+	public Game loadGameVersion(String gameId, SaveType saveType, String version);
 	
 	public Game saveGame(SaveDto saveDto);
 	

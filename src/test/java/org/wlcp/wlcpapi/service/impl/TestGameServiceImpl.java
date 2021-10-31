@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
 import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
 import org.wlcp.wlcpapi.archive.repository.ArchiveUsernameRepository;
+import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.datamodel.master.Username;
@@ -121,7 +122,7 @@ public class TestGameServiceImpl {
     	saveDto.gameSave = new GameSave();
 		when(gameRepository.save(any(Game.class))).thenReturn(game);
 		when(gameRepository.findById(any(String.class))).thenReturn(Optional.of(game));
-		when(gameSaveRepository.max(any(String.class))).thenReturn(1);
+		when(gameSaveRepository.max(any(String.class), any(SaveType.class))).thenReturn(1);
 		when(gameSaveRepository.save(any(GameSave.class))).thenReturn(new GameSave());
 		when(archiveGameRepository.save(any(Game.class))).thenReturn(new Game());
 		when(usernameRepository.findById(any(String.class))).thenReturn(Optional.of(new Username("", "", "", "", "")));
