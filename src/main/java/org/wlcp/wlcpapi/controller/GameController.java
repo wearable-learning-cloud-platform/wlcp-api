@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
 import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
 import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
@@ -50,6 +52,9 @@ public class GameController {
 	@Autowired
 	private GameSaveRepository gameSaveRepository;
 	
+	@Autowired
+	private ArchiveGameRepository archiveGameRepository;
+	
 	@GetMapping("/getGames")
 	public ResponseEntity<List<GameDto>> getGames() {
 		List<Game> games = gameRepository.findAll();
@@ -65,6 +70,17 @@ public class GameController {
 	@GetMapping("/getGame/{gameId}")
 	public ResponseEntity<Game> getGame(@PathVariable String gameId) {
 		Optional<Game> game = gameRepository.findById(gameId);
+		return new ResponseEntity<Game>(game.isPresent() ? game.get() : null, HttpStatus.OK);
+	}
+	
+	@GetMapping("/getDebugGame/{gameId}")
+	@Transactional("archiveTransactionManager")
+	public ResponseEntity<Game> getDebugGame(@PathVariable String gameId) {
+		List<GameSave> gameSaves = gameSaveRepository.findByMasterGameId(gameId);
+		Optional<Game> game = archiveGameRepository.findById(gameSaves.get(gameSaves.size() - 1).getReferenceGameId());
+		Hibernate.initialize(game.get().getStates());
+		Hibernate.initialize(game.get().getConnections());
+		Hibernate.initialize(game.get().getTransitions());
 		return new ResponseEntity<Game>(game.isPresent() ? game.get() : null, HttpStatus.OK);
 	}
 	

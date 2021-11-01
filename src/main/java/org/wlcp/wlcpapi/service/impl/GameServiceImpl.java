@@ -130,7 +130,7 @@ public class GameServiceImpl implements GameService {
 		GameSave gameSave = new GameSave(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + referenceId, saveDto.gameSave.getType(), version, saveDto.gameSave.getDescription());
 		gameSave = gameSaveRepository.save(gameSave);
 		if(!archiveUsernameRepository.existsById(saveDto.game.getUsername().getUsernameId())) { archiveUsernameRepository.save(saveDto.game.getUsername()); }
-		Game copiedGame = deepCopyWithoutSave(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + referenceId, saveDto.game.getUsername().getUsernameId(), saveDto.game.getVisibility());
+		Game copiedGame = deepCopyGame(saveDto.game.getGameId(), saveDto.game.getGameId() + " " + referenceId, saveDto.game.getUsername(), saveDto.game.getVisibility(), saveDto.game);
 		archiveGameRepository.save(copiedGame);
 	}
 	
