@@ -81,7 +81,7 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public Game saveGame(Game game) {
 		if(game.getStates().size() == 0 && game.getConnections().size() == 0 && game.getTransitions().size() == 0) {
-			if(!gameRepository.findById(game.getGameId()).isPresent()) {
+			if(!gameExists(game.getGameId())) {
 				return gameRepository.save(game);
 			} else {
 				//Create new already exists
@@ -95,12 +95,14 @@ public class GameServiceImpl implements GameService {
 	@Override
 	@Transactional
 	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		gameExists(copyRenameDeleteGameDto.newGameId);
 		return deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, copyRenameDeleteGameDto.visibility);
 	}
 
 	@Override
 	@Transactional
 	public Game renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		gameExists(copyRenameDeleteGameDto.newGameId);
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
 		
 		if(game.getUsername().getUsernameId().equals(copyRenameDeleteGameDto.usernameId)) {
@@ -198,6 +200,15 @@ public class GameServiceImpl implements GameService {
 		  hashtext = "0"+hashtext;
 		}
 		return hashtext;
+	}
+	
+	private boolean gameExists(String gameId) {
+		if(gameRepository.findById(gameId).isPresent()) {
+			//Create new already exists
+			throw new RuntimeException("Game Already Exists!");
+		} else {
+			return false;	
+		}
 	}
 
 	@Override
