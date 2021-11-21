@@ -123,7 +123,11 @@ public class GameController {
 	@PostMapping(value="/copyGame")
 	@ResponseBody
 	public ResponseEntity<Game> copyGame(@RequestBody CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
-		return new ResponseEntity<Game>(gameService.copyGame(copyRenameDeleteGameDto), HttpStatus.OK);
+		if(copyRenameDeleteGameDto.saveType.equals(SaveType.ARCHIVED)) {
+			return new ResponseEntity<Game>(gameService.copyArchivedGame(copyRenameDeleteGameDto), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Game>(gameService.copyGame(copyRenameDeleteGameDto), HttpStatus.OK);
+		}
 	}
 	
 	@PostMapping(value="/renameGame")

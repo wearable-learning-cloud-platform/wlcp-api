@@ -23,6 +23,8 @@ public interface GameService {
 	
 	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
 	
+	public Game copyArchivedGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
+	
 	public Game renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
 	
 	public void deleteGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);

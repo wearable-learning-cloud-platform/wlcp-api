@@ -15,5 +15,6 @@ public interface GameSaveRepository extends JpaRepository<GameSave, String> {
 	public List<GameSave> findByMasterGameId(String masterGameId);
 	public List<GameSave> findByMasterGameIdAndType(String masterGameId, SaveType saveType);
 	public GameSave findByMasterGameIdAndVersionAndType(String masterGameId, int version, SaveType type);
+	public GameSave findByReferenceGameId(String referenceGameId);
 	
 }

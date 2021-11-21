@@ -6,12 +6,12 @@ import static org.wlcp.wlcpapi.helper.HelperMethods.md5;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -104,22 +104,32 @@ public class GameServiceImpl implements GameService {
 	
 	@Override
 	public Game saveGame(SaveDto saveDto) {
-		if(saveDto.game.getStates().size() == 0 && saveDto.game.getConnections().size() == 0 && saveDto.game.getTransitions().size() == 0) {
-			if(!gameRepository.findById(saveDto.game.getGameId()).isPresent()) {
-				Game game = gameRepository.save(saveDto.game);
-				archiveGame(saveDto);
-				return game;
-			} else {
-				//Create new already exists
-				throw new RuntimeException("Game Already Exists!");
-			}
-		} else {
-			Game game = null;
-			if(saveDto.gameSave.getType().equals(SaveType.MANUAL)) {
-				game = gameRepository.save(saveDto.game);
-			}
+		switch(saveDto.gameSave.getType()) {
+		case NEW_GAME:
+			Game game = gameRepository.save(saveDto.game);
 			archiveGame(saveDto);
 			return game;
+		case MANUAL:
+			game = gameRepository.save(saveDto.game);
+			deleteArchiveAutoSaveGames(saveDto.game.getGameId());
+			archiveGame(saveDto);
+			return game;
+		case AUTO:
+			archiveGame(saveDto);
+			return null;
+		case ARCHIVED:
+			game = archiveGameRepository.save(saveDto.game);
+			return game;
+		case ARCHIVED_MANUAL:
+			GameSave gs = gameSaveRepository.findByReferenceGameId(saveDto.game.getGameId());
+			game = deepCopyGame(gs.getReferenceGameId(), gs.getMasterGameId(), saveDto.game.getUsername(), saveDto.game.getVisibility(), saveDto.game);
+			saveDto.game = game;
+			game = gameRepository.save(saveDto.game);
+			saveDto.gameSave.setType(SaveType.MANUAL);
+			archiveGame(saveDto);
+			return game;
+		default:
+			return null;
 		}
 	}
 	
@@ -137,7 +147,13 @@ public class GameServiceImpl implements GameService {
 	@Override
 	@Transactional
 	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
-		return deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, copyRenameDeleteGameDto.visibility);
+		return deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, copyRenameDeleteGameDto.visibility, gameRepository);
+	}
+	
+	@Transactional(transactionManager="archiveTransactionManager")
+	public Game copyArchivedGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		Game game = deepCopyWithoutSave(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, copyRenameDeleteGameDto.visibility, archiveGameRepository);
+		return gameRepository.save(game);
 	}
 
 	@Override
@@ -146,7 +162,7 @@ public class GameServiceImpl implements GameService {
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
 		
 		if(game.getUsername().getUsernameId().equals(copyRenameDeleteGameDto.usernameId)) {
-			Game copiedGame = deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, game.getVisibility());
+			Game copiedGame = deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, game.getVisibility(), gameRepository);
 			gameRepository.delete(game);
 			return copiedGame;
 		} else {
@@ -163,20 +179,29 @@ public class GameServiceImpl implements GameService {
 	}
 	
 	private void deleteArchivedGames(String gameId) {
-		List<GameSave> test = gameSaveRepository.findByMasterGameId(gameId);
-		Collections.reverse(test);
-		for(GameSave gameSave : test) {
+		List<GameSave> gameSaves = gameSaveRepository.findByMasterGameId(gameId);
+		Collections.reverse(gameSaves);
+		for(GameSave gameSave : gameSaves) {
 			archiveGameRepository.deleteById(gameSave.getReferenceGameId());
 			gameSaveRepository.delete(gameSave);
 		}
 
 	}
 	
-	public Game deepCopyGame(String gameId, String newGameId, String usernameId, Boolean visibility) {		
-		return gameRepository.save(deepCopyWithoutSave(gameId, newGameId, usernameId, visibility));
+	private void deleteArchiveAutoSaveGames(String gameId) {
+		List<GameSave> gameSaves = gameSaveRepository.findByMasterGameIdAndType(gameId, SaveType.AUTO);
+		Collections.reverse(gameSaves);
+		for(GameSave gameSave : gameSaves) {
+			archiveGameRepository.deleteById(gameSave.getReferenceGameId());
+			gameSaveRepository.delete(gameSave);
+		}
 	}
 	
-	public Game deepCopyWithoutSave(String gameId, String newGameId, String usernameId, Boolean visibility) {
+	public Game deepCopyGame(String gameId, String newGameId, String usernameId, Boolean visibility, JpaRepository<Game, String> gameRepository) {		
+		return gameRepository.save(deepCopyWithoutSave(gameId, newGameId, usernameId, visibility, gameRepository));
+	}
+	
+	public Game deepCopyWithoutSave(String gameId, String newGameId, String usernameId, Boolean visibility, JpaRepository<Game, String> gameRepository) {
 		Game game = gameRepository.findById(gameId).get();
 		
 		Hibernate.initialize(game.getStates());
