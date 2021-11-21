@@ -76,8 +76,13 @@ public class GameController {
 	@GetMapping("/getDebugGame/{gameId}")
 	@Transactional("archiveTransactionManager")
 	public ResponseEntity<Game> getDebugGame(@PathVariable String gameId) {
-		List<GameSave> gameSaves = gameSaveRepository.findByMasterGameId(gameId);
-		Optional<Game> game = archiveGameRepository.findById(gameSaves.get(gameSaves.size() - 1).getReferenceGameId());
+//		List<GameSave> gameSaves = gameSaveRepository.findByMasterGameId(gameId);
+//		Optional<Game> game = archiveGameRepository.findById(gameSaves.get(gameSaves.size() - 1).getReferenceGameId());
+//		Hibernate.initialize(game.get().getStates());
+//		Hibernate.initialize(game.get().getConnections());
+//		Hibernate.initialize(game.get().getTransitions());
+//		return new ResponseEntity<Game>(game.isPresent() ? game.get() : null, HttpStatus.OK);
+		Optional<Game> game = archiveGameRepository.findById(gameId);
 		Hibernate.initialize(game.get().getStates());
 		Hibernate.initialize(game.get().getConnections());
 		Hibernate.initialize(game.get().getTransitions());
