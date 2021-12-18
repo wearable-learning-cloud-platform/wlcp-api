@@ -19,7 +19,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
 import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
+import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
@@ -50,6 +52,9 @@ public class TestGameController {
     
     @MockBean
     private UsernameService usernameService;
+    
+    @MockBean
+    private ArchiveGameRepository archiveGameRepository;
     
     @Test
     public void testGetGamesSuccess() throws UnsupportedEncodingException, Exception {
@@ -128,6 +133,7 @@ public class TestGameController {
     public void testCopyGameSuccess() throws UnsupportedEncodingException, JsonProcessingException, Exception {
     	Game game = new Game();
     	CopyRenameDeleteGameDto copyDto = new CopyRenameDeleteGameDto();
+    	copyDto.saveType = SaveType.MANUAL;
     	when(gameService.copyGame(any(CopyRenameDeleteGameDto.class))).thenReturn(game);
     	mvc.perform(post("/gameController/copyGame/")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")

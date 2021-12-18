@@ -120,9 +120,9 @@ public class TestGameServiceImpl {
     	game.setUsername(new Username("", "", "", "", ""));
     	saveDto.game = game;
     	saveDto.gameSave = new GameSave();
+    	saveDto.gameSave.setType(SaveType.MANUAL);
 		when(gameRepository.save(any(Game.class))).thenReturn(game);
 		when(gameRepository.findById(any(String.class))).thenReturn(Optional.of(game));
-		when(gameSaveRepository.maxMasterGameIdAndSaveType(any(String.class), any(SaveType.class))).thenReturn(1);
 		when(gameSaveRepository.save(any(GameSave.class))).thenReturn(new GameSave());
 		when(archiveGameRepository.save(any(Game.class))).thenReturn(new Game());
 		when(usernameRepository.findById(any(String.class))).thenReturn(Optional.of(new Username("", "", "", "", "")));

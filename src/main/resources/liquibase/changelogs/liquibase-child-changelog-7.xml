@@ -9,7 +9,7 @@
             <column name="master_game_id" type="VARCHAR(255)"/>
             <column name="reference_game_id" type="VARCHAR(255)"/>
             <column name="type" type="INT"/>
-            <column name="version" type="INT"/>
+            <column name="time_stamp" type="DATETIME"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

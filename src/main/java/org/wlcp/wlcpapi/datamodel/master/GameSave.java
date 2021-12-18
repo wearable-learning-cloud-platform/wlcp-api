@@ -1,5 +1,7 @@
 package org.wlcp.wlcpapi.datamodel.master;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 
 @Entity
@@ -20,6 +23,10 @@ public class GameSave {
 	@GeneratedValue(strategy = GenerationType.IDENTITY )
 	private int gameSaveId;
 	
+	@Column(name = "TIME_STAMP")
+	@CreationTimestamp
+	private Timestamp timeStamp;
+	
 	@Column(name = "MASTER_GAME_ID")
 	private String masterGameId;
 	
@@ -30,9 +37,6 @@ public class GameSave {
 	@Enumerated(EnumType.ORDINAL)
 	private SaveType type;
 	
-	@Column(name = "VERSION")
-	private int version;
-	
 	@Column(name = "DESCRIPTION")
 	private String description;
 	
@@ -40,12 +44,11 @@ public class GameSave {
 		
 	}
 
-	public GameSave(String masterGameId, String referenceGameId, SaveType type, int version, String description) {
+	public GameSave(String masterGameId, String referenceGameId, SaveType type, String description) {
 		super();
 		this.masterGameId = masterGameId;
 		this.referenceGameId = referenceGameId;
 		this.type = type;
-		this.version = version;
 		this.description = description;
 	}
 
@@ -55,6 +58,14 @@ public class GameSave {
 
 	public void setGameSaveId(int gameSaveId) {
 		this.gameSaveId = gameSaveId;
+	}
+
+	public Timestamp getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(Timestamp timeStamp) {
+		this.timeStamp = timeStamp;
 	}
 
 	public String getMasterGameId() {
@@ -79,14 +90,6 @@ public class GameSave {
 
 	public void setType(SaveType type) {
 		this.type = type;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
 	}
 
 	public String getDescription() {
