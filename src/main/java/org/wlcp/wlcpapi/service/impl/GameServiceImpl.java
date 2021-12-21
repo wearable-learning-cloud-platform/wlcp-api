@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
 import org.wlcp.wlcpapi.archive.repository.ArchiveUsernameRepository;
 import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
-import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.datamodel.master.Username;
@@ -97,7 +96,7 @@ public class GameServiceImpl implements GameService {
 	
 	@Override
 	@Transactional("archiveTransactionManager")
-	public Game loadGameVersion(String gameId, SaveType saveType, String version) {
+	public Game loadGameVersion(String gameId) {
 		Game game = archiveGameRepository.findById(gameId).get();
 		Hibernate.initialize(game.getStates());
 		Hibernate.initialize(game.getConnections());
@@ -113,6 +112,7 @@ public class GameServiceImpl implements GameService {
 			archiveGame(saveDto);
 			return game;
 		case MANUAL:
+		case RUN_AND_DEBUG:
 			game = gameRepository.save(saveDto.game);
 			archiveGame(saveDto);
 			return game;
