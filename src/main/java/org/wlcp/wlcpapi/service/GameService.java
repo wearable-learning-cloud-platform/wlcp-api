@@ -20,6 +20,8 @@ public interface GameService {
 	
 	public Game saveGame(SaveDto saveDto);
 	
+	public Game revertGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
+	
 	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);
 	
 	public Game copyArchivedGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto);

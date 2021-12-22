@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
 import org.wlcp.wlcpapi.archive.repository.ArchiveUsernameRepository;
 import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
+import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.datamodel.master.Username;
@@ -108,20 +109,29 @@ public class GameServiceImpl implements GameService {
 	public Game saveGame(SaveDto saveDto) {
 		switch(saveDto.gameSave.getType()) {
 		case NEW_GAME:
+		case REVERT_ARCHIVED:
+		case MANUAL:
+		case RUN_AND_DEBUG:
+		case AUTO:
 			Game game = gameRepository.save(saveDto.game);
 			archiveGame(saveDto);
 			return game;
-		case MANUAL:
-		case RUN_AND_DEBUG:
-			game = gameRepository.save(saveDto.game);
-			archiveGame(saveDto);
-			return game;
-		case AUTO:
-			archiveGame(saveDto);
-			return null;
+		//case AUTO:
+			//archiveGame(saveDto);
+			//return null;
 		default:
 			return null;
 		}
+	}
+	
+	@Override
+	@Transactional("archiveTransactionManager")
+	public Game revertGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		Game copiedGame = deepCopyWithoutSave(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, true, archiveGameRepository);//deepCopyWithoutSaveArchive(copyRenameDeleteGameDto);
+		gameRepository.deleteById(copyRenameDeleteGameDto.newGameId);
+		GameSave gameSave = new GameSave(copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.oldGameId, SaveType.REVERT_ARCHIVED, "Reverting game.");
+		gameSave = gameSaveRepository.save(gameSave);
+		return gameRepository.save(copiedGame);
 	}
 	
 	@Transactional("archiveTransactionManager")

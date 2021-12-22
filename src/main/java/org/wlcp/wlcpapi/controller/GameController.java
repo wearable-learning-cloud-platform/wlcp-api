@@ -73,9 +73,9 @@ public class GameController {
 		return new ResponseEntity<Game>(game.isPresent() ? game.get() : null, HttpStatus.OK);
 	}
 	
-	@GetMapping("/getDebugGame/{gameId}")
+	@GetMapping("/getArchivedGame/{gameId}")
 	@Transactional("archiveTransactionManager")
-	public ResponseEntity<Game> getDebugGame(@PathVariable String gameId) {
+	public ResponseEntity<Game> getArchivedGame(@PathVariable String gameId) {
 		Optional<Game> game = archiveGameRepository.findById(gameId);
 		Hibernate.initialize(game.get().getStates());
 		Hibernate.initialize(game.get().getConnections());
@@ -119,10 +119,16 @@ public class GameController {
 		return new ResponseEntity<Game>(gameService.saveGame(saveDto), HttpStatus.OK);
 	}
 	
+	@PostMapping(value="/revertGame")
+	@ResponseBody
+	public ResponseEntity<Game> revertGame(@RequestBody CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		return new ResponseEntity<Game>(gameService.revertGame(copyRenameDeleteGameDto), HttpStatus.OK);
+	}
+	
 	@PostMapping(value="/copyGame")
 	@ResponseBody
 	public ResponseEntity<Game> copyGame(@RequestBody CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
-		if(copyRenameDeleteGameDto.saveType.equals(SaveType.ARCHIVED)) {
+		if(copyRenameDeleteGameDto.saveType.equals(SaveType.COPY_ARCHIVED)) {
 			return new ResponseEntity<Game>(gameService.copyArchivedGame(copyRenameDeleteGameDto), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Game>(gameService.copyGame(copyRenameDeleteGameDto), HttpStatus.OK);

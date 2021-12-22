@@ -6,6 +6,7 @@ public enum SaveType {
 	MANUAL,
 	AUTO,
 	RUN_AND_DEBUG,
-	ARCHIVED
+	COPY_ARCHIVED,
+	REVERT_ARCHIVED
 	
 }
