@@ -109,6 +109,7 @@ public class GameServiceImpl implements GameService {
 	public Game saveGame(SaveDto saveDto) {
 		switch(saveDto.gameSave.getType()) {
 		case NEW_GAME:
+			gameExists(saveDto.game.getGameId());
 		case REVERT_ARCHIVED:
 		case MANUAL:
 		case RUN_AND_DEBUG:
@@ -162,11 +163,13 @@ public class GameServiceImpl implements GameService {
 	@Override
 	@Transactional
 	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		gameExists(copyRenameDeleteGameDto.newGameId);
 		return deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, copyRenameDeleteGameDto.visibility, gameRepository);
 	}
 	
 	@Transactional(transactionManager="archiveTransactionManager")
 	public Game copyArchivedGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		gameExists(copyRenameDeleteGameDto.newGameId);
 		Game game = deepCopyWithoutSave(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, copyRenameDeleteGameDto.visibility, archiveGameRepository);
 		return gameRepository.save(game);
 	}
@@ -174,6 +177,7 @@ public class GameServiceImpl implements GameService {
 	@Override
 	@Transactional
 	public Game renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		gameExists(copyRenameDeleteGameDto.newGameId);
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
 		
 		if(game.getUsername().getUsernameId().equals(copyRenameDeleteGameDto.usernameId)) {
@@ -253,6 +257,15 @@ public class GameServiceImpl implements GameService {
 			}
 		}
 		return copiedGame;
+	}
+	
+	private boolean gameExists(String gameId) {
+		if(gameRepository.findById(gameId).isPresent()) {
+			//Create new already exists
+			throw new RuntimeException("Game Already Exists!");
+		} else {
+			return false;	
+		}
 	}
 
 	@Override
