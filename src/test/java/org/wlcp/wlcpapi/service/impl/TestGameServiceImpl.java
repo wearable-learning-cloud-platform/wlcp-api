@@ -16,28 +16,46 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
+import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
+import org.wlcp.wlcpapi.archive.repository.ArchiveUsernameRepository;
+import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
+import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.datamodel.master.Username;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
 import org.wlcp.wlcpapi.datamodel.master.state.OutputState;
 import org.wlcp.wlcpapi.datamodel.master.state.StartState;
+import org.wlcp.wlcpapi.datamodel.master.state.State;
 import org.wlcp.wlcpapi.datamodel.master.transition.KeyboardInput;
 import org.wlcp.wlcpapi.datamodel.master.transition.SequenceButtonPress;
 import org.wlcp.wlcpapi.datamodel.master.transition.Transition;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
+import org.wlcp.wlcpapi.dto.SaveDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.repository.UsernameRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles({ "test" })
 public class TestGameServiceImpl {
 
 	@Mock
 	private GameRepository gameRepository;
 	
 	@Mock
+	private ArchiveGameRepository archiveGameRepository;
+	
+	@Mock
+	private GameSaveRepository gameSaveRepository;
+	
+	@Mock
 	private UsernameRepository usernameRepository;
+	
+	@Mock
+	private ArchiveUsernameRepository archiveUsernameRepository;
 
 	@InjectMocks
 	private GameServiceImpl gameService;
@@ -96,8 +114,21 @@ public class TestGameServiceImpl {
 	
 	@Test
 	public void testSaveGameSuccess() {
-		when(gameRepository.save(any(Game.class))).thenReturn(new Game());
-		gameService.saveGame(new Game());
+		SaveDto saveDto = new SaveDto();
+    	Game game = createBasicTestGame();
+    	game.getStates().add(new State());
+    	game.setUsername(new Username("", "", "", "", ""));
+    	saveDto.game = game;
+    	saveDto.gameSave = new GameSave();
+    	saveDto.gameSave.setType(SaveType.MANUAL);
+		when(gameRepository.save(any(Game.class))).thenReturn(game);
+		when(gameRepository.findById(any(String.class))).thenReturn(Optional.of(game));
+		when(gameSaveRepository.save(any(GameSave.class))).thenReturn(new GameSave());
+		when(archiveGameRepository.save(any(Game.class))).thenReturn(new Game());
+		when(usernameRepository.findById(any(String.class))).thenReturn(Optional.of(new Username("", "", "", "", "")));
+		when(archiveUsernameRepository.existsById(any(String.class))).thenReturn(true);
+		when(archiveUsernameRepository.save(any(Username.class))).thenReturn(new Username("", "", "", "", ""));
+		gameService.saveGame(saveDto);
 	}
 	
 	@Test

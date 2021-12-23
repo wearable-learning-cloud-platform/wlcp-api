@@ -2,21 +2,19 @@ spring:
   application:
     name: wlcp-api
   datasource:
-    url: jdbc:mysql://wlcp-db:3306/wlcp-api
+    jdbcUrl: jdbc:mysql://wlcp-db:3306/wlcp-api
+    username: wlcp
+    password: wlcp
+  archive-datasource:
+    jdbcUrl: jdbc:mysql://wlcp-db:3306/wlcp-api-archive
     username: wlcp
     password: wlcp
   liquibase:
     change-log: classpath:liquibase/changelogs/liquibase-parent-changelog.xml
     default-schema: wlcp-api
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        event:
-          merge:
-            entity_copy_observer: allow
+  archive-liquibase:
+    change-log: classpath:liquibase/changelogs/liquibase-parent-changelog.xml
+    default-schema: wlcp-api-archive
   servlet:
     multipart:
       max-file-size: 50MB
