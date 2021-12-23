@@ -9,10 +9,13 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
 
@@ -31,25 +34,29 @@ public class OutputState extends State implements Serializable {
 	@Column(name = "DESCRIPTION")
 	private String description;
 	
-	@ElementCollection()
+	@ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "DISPLAY_TEXT_MAP")
     @MapKeyColumn(name = "SCOPE")
     @Column(name = "DISPLAY_TEXT", length = 2048)
+	@Fetch(FetchMode.SELECT)
 	private Map<String, String> displayText = new HashMap<String, String>();
 	
-	@ElementCollection()
+	@ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "PICTURE_OUTPUT")
     @MapKeyColumn(name = "SCOPE")
+	@Fetch(FetchMode.SELECT)
 	private Map<String, PictureOutput> pictureOutputs = new HashMap<String, PictureOutput>();
 	
-	@ElementCollection()
+	@ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "SOUND_OUTPUT")
     @MapKeyColumn(name = "SCOPE")
+	@Fetch(FetchMode.SELECT)
 	private Map<String, SoundOutput> soundOutputs = new HashMap<String, SoundOutput>();
 	
-	@ElementCollection()
+	@ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "VIDEO_OUTPUT")
     @MapKeyColumn(name = "SCOPE")
+	@Fetch(FetchMode.SELECT)
 	private Map<String, VideoOutput> videoOutputs = new HashMap<String, VideoOutput>();
 
 	public OutputState() {

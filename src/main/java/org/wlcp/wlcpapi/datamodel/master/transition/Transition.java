@@ -10,6 +10,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.connection.Connection;
 
@@ -49,32 +52,38 @@ public class Transition implements Serializable {
 	@JoinColumn(name = "CONNECTION")
 	private Connection connection;
 	
-	@ElementCollection()
+	@ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "ACTIVE_TRANSITIONS")
     @MapKeyColumn(name = "SCOPE")
+	@Fetch(FetchMode.SELECT)
 	private Map<String, String> activeTransitions = new HashMap<String, String>();
 	
-	@ElementCollection()
+	@ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "SINGLE_BUTTON_PRESS")
     @MapKeyColumn(name = "SCOPE")
+	@Fetch(FetchMode.SELECT)
 	private Map<String, SingleButtonPress> singleButtonPresses = new HashMap<String, SingleButtonPress>();
 	
-	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	@MapKey(name = "scope")
 	private Map<String, SequenceButtonPress> sequenceButtonPresses = new HashMap<String, SequenceButtonPress>();
 	
-	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	@MapKey(name = "scope")
 	private Map<String, KeyboardInput> keyboardInputs = new HashMap<String, KeyboardInput>();
 	
-	@ElementCollection()
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "TIMER_DURATION")
 	@MapKeyColumn(name = "SCOPE")
+	@Fetch(FetchMode.SELECT)
 	private Map<String, TimerDuration> timerDurations = new HashMap<String, TimerDuration>();
 	
-	@ElementCollection()
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "RANDOM")
 	@MapKeyColumn(name = "SCOPE")
+	@Fetch(FetchMode.SELECT)
 	private Map<String, Randoms> randoms = new HashMap<String, Randoms>();
 
 	public Transition() {

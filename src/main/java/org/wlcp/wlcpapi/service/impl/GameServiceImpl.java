@@ -80,18 +80,29 @@ public class GameServiceImpl implements GameService {
 	
 	@Override
 	public Game saveGame(Game game) {
-		return gameRepository.save(game);
+		if(game.getStates().size() == 0 && game.getConnections().size() == 0 && game.getTransitions().size() == 0) {
+			if(!gameExists(game.getGameId())) {
+				return gameRepository.save(game);
+			} else {
+				//Create new already exists
+				throw new RuntimeException("Game Already Exists!");
+			}
+		} else {
+			return gameRepository.save(game);	
+		}
 	}
 	
 	@Override
 	@Transactional
 	public Game copyGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		gameExists(copyRenameDeleteGameDto.newGameId);
 		return deepCopyGame(copyRenameDeleteGameDto.oldGameId, copyRenameDeleteGameDto.newGameId, copyRenameDeleteGameDto.usernameId, copyRenameDeleteGameDto.visibility);
 	}
 
 	@Override
 	@Transactional
 	public Game renameGame(CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		gameExists(copyRenameDeleteGameDto.newGameId);
 		Game game = gameRepository.findById(copyRenameDeleteGameDto.oldGameId).get();
 		
 		if(game.getUsername().getUsernameId().equals(copyRenameDeleteGameDto.usernameId)) {
@@ -110,45 +121,21 @@ public class GameServiceImpl implements GameService {
 		gameRepository.delete(game);	
 	}
 	
-	private Game deepCopyGame(String gameId, String newGameId, String usernameId, Boolean visibility) {
+	public Game deepCopyGame(String gameId, String newGameId, String usernameId, Boolean visibility) {
 		Game game = gameRepository.findById(gameId).get();
-		Username username = usernameRepository.findById(usernameId).get();
 		
-		//Initialize Lazy Load Proxy's
-		//This should and can be done generically and recursively. Temporary for now.
 		Hibernate.initialize(game.getStates());
 		Hibernate.initialize(game.getConnections());
 		Hibernate.initialize(game.getTransitions());
 		
-		for(State state : game.getStates()) {
-			Hibernate.initialize(state.getInputConnections());
-			Hibernate.initialize(state.getOutputConnections());
-			if(state instanceof OutputState) {
-				Hibernate.initialize(((OutputState) state).getDisplayText());
-				Hibernate.initialize(((OutputState) state).getPictureOutputs());
-				Hibernate.initialize(((OutputState) state).getSoundOutputs());
-				Hibernate.initialize(((OutputState) state).getVideoOutputs());
-			}
-		}
+		Username username = usernameRepository.findById(usernameId).get();
 		
-		for(Connection connection : game.getConnections()) {
-			Hibernate.initialize(connection.getConnectionFrom());
-			Hibernate.initialize(connection.getConnectionTo());
-		}
+		Game copiedGame = deepCopyGame(gameId, newGameId, username, visibility, game);
 		
-		for(Transition transition : game.getTransitions()) {
-			Hibernate.initialize(transition.getActiveTransitions());
-			Hibernate.initialize(transition.getSingleButtonPresses());
-			Hibernate.initialize(transition.getSequenceButtonPresses());
-			Hibernate.initialize(transition.getKeyboardInputs());
-			for(Entry<String, SequenceButtonPress> entry : transition.getSequenceButtonPresses().entrySet()) {
-				Hibernate.initialize(entry.getValue().getSequences());
-			}
-			for(Entry<String, KeyboardInput> entry : transition.getKeyboardInputs().entrySet()) {
-				Hibernate.initialize(entry.getValue().getKeyboardInputs());
-			}
-		}
-		
+		return gameRepository.save(copiedGame);
+	}
+	
+	public Game deepCopyGame(String gameId, String newGameId, Username username, Boolean visibility, Game game) {
 		Game copiedGame = (Game) deepCopy(game);
 		copiedGame.setGameId(newGameId);
 		copiedGame.setUsername(username);
@@ -179,9 +166,7 @@ public class GameServiceImpl implements GameService {
 				entry.getValue().setKeyboardInputId(transition.getTransitionId() + "_" + entry.getValue().getScope().toLowerCase().replace(" ", "_"));
 			}
 		}
-		
-		return gameRepository.save(copiedGame);
-		
+		return copiedGame;
 	}
 	
 	private static Object deepCopy(Object object) {
@@ -215,6 +200,15 @@ public class GameServiceImpl implements GameService {
 		  hashtext = "0"+hashtext;
 		}
 		return hashtext;
+	}
+	
+	private boolean gameExists(String gameId) {
+		if(gameRepository.findById(gameId).isPresent()) {
+			//Create new already exists
+			throw new RuntimeException("Game Already Exists!");
+		} else {
+			return false;	
+		}
 	}
 
 	@Override

@@ -8,10 +8,14 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * Entity implementation class for Entity: SequenceButtonPress
@@ -36,9 +40,10 @@ public class SequenceButtonPress implements Serializable {
 	@Column(name = "SCOPE")
 	private String scope;
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name="SEQUENCE_BUTTON_PRESSES", joinColumns=@JoinColumn(name="SEQUENCE_BUTTON_PRESS_ID"))
 	@Column(name="SEQUENCES")
+	@Fetch(FetchMode.SELECT)
 	private List<String> sequences = new ArrayList<String>();
 
 	public SequenceButtonPress() {
