@@ -2,7 +2,7 @@ spring:
   application:
     name: wlcp-api
   datasource:
-    jbdcUrl: ${DB_URL}
+    jdbcUrl: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
   archive-datasource:
