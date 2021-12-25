@@ -41,7 +41,7 @@ public class TestGameJPA {
 		Assertions.assertThrows(PersistenceException.class, () -> {
 			Username username = new Username("user","password", "firstname", "lastname", "email");
 			entityManager.persist(username);
-			Game game = new Game(new String(new byte[41], Charset.forName("UTF-8")), 0, 0, username,
+			Game game = new Game(new String(new byte[256], Charset.forName("UTF-8")), 0, 0, username,
 					false, false);
 			entityManager.persist(game);
 			entityManager.flush();
