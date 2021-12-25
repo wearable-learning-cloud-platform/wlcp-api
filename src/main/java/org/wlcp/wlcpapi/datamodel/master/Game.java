@@ -37,7 +37,7 @@ public class Game implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(length = 40, name = "GAME_ID")
+	@Column(name = "GAME_ID")
 	private String gameId;
 
 	@Column(name = "TEAM_COUNT")
