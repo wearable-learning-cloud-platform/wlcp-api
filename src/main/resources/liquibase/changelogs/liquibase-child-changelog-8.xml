@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="Matt (manual)" id="1640411714126-4">
+    	<dropForeignKeyConstraint baseTableName="game_connections" constraintName="FK90hnc2esdt6qx5m0ipa1wjudq" />
+    	<dropForeignKeyConstraint baseTableName="game_transitions" constraintName="FKg172152tp0ck4lij2821sxl5e" />
+    	<dropForeignKeyConstraint baseTableName="game_states" constraintName="FK3m3jhuk6tx8n7x003pkdnxpiy" />
+    	<dropForeignKeyConstraint baseTableName="connection" constraintName="FK5110878maxlyvr43nfs4yxvxs" />
+    	<dropForeignKeyConstraint baseTableName="state" constraintName="FKa6i3y3busrny9jnle14pb76cl" />
+    	<dropForeignKeyConstraint baseTableName="transition" constraintName="FKo3c6h7puddnh8c8nehqg3qiq9" />
+    	<modifyDataType columnName="game" newDataType="varchar(255)" tableName="connection"/>
+        <modifyDataType columnName="game" newDataType="varchar(255)" tableName="transition"/>
+        <modifyDataType columnName="game" newDataType="varchar(255)" tableName="state"/>
+        <modifyDataType columnName="game_id" newDataType="varchar(255)" tableName="game"/>
+        <modifyDataType columnName="game_id" newDataType="varchar(255)" tableName="game_connections"/>
+        <modifyDataType columnName="game_id" newDataType="varchar(255)" tableName="game_transitions"/>
+        <modifyDataType columnName="game_id" newDataType="varchar(255)" tableName="game_states"/>
+        <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="game_connections" constraintName="FK90hnc2esdt6qx5m0ipa1wjudq" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="game_transitions" constraintName="FKg172152tp0ck4lij2821sxl5e" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="game_states" constraintName="FK3m3jhuk6tx8n7x003pkdnxpiy" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
+    	<addForeignKeyConstraint baseColumnNames="game" baseTableName="connection" constraintName="FK5110878maxlyvr43nfs4yxvxs" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
+    	<addForeignKeyConstraint baseColumnNames="game" baseTableName="state" constraintName="FKa6i3y3busrny9jnle14pb76cl" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
+    	<addForeignKeyConstraint baseColumnNames="game" baseTableName="transition" constraintName="FKo3c6h7puddnh8c8nehqg3qiq9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

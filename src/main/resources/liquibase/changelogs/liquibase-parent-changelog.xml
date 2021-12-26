@@ -11,4 +11,5 @@
 	<include file="liquibase/changelogs/liquibase-child-changelog-5.xml" />
 	<include file="liquibase/changelogs/liquibase-child-changelog-6.xml" />
 	<include file="liquibase/changelogs/liquibase-child-changelog-7.xml" />
+	<include file="liquibase/changelogs/liquibase-child-changelog-8.xml" />
 </databaseChangeLog>
