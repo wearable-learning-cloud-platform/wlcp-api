@@ -11,9 +11,9 @@
         <modifyDataType columnName="game" newDataType="varchar(255)" tableName="transition"/>
         <modifyDataType columnName="game" newDataType="varchar(255)" tableName="state"/>
         <modifyDataType columnName="game_id" newDataType="varchar(255)" tableName="game"/>
-        <modifyDataType columnName="game_id" newDataType="varchar(255)" tableName="game_connections"/>
-        <modifyDataType columnName="game_id" newDataType="varchar(255)" tableName="game_transitions"/>
-        <modifyDataType columnName="game_id" newDataType="varchar(255)" tableName="game_states"/>
+        <modifyDataType columnName="game_id" newDataType="varchar(255) NOT NULL" tableName="game_connections"/>
+        <modifyDataType columnName="game_id" newDataType="varchar(255) NOT NULL" tableName="game_transitions"/>
+        <modifyDataType columnName="game_id" newDataType="varchar(255) NOT NULL" tableName="game_states"/>
         <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="game_connections" constraintName="FK90hnc2esdt6qx5m0ipa1wjudq" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
         <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="game_transitions" constraintName="FKg172152tp0ck4lij2821sxl5e" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
         <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="game_states" constraintName="FK3m3jhuk6tx8n7x003pkdnxpiy" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="game_id" referencedTableName="game" validate="true"/>
