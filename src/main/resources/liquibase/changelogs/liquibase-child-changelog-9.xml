@@ -2,22 +2,22 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <changeSet author="Matt (generated)" id="1640554753928-1">
         <addColumn tableName="single_button_press">
-            <column name="button_1_label" type="VARCHAR(20 BYTE)"/>
+            <column name="button_1_label" type="VARCHAR(20 BYTE)" defaultValue="Red Button"/>
         </addColumn>
     </changeSet>
     <changeSet author="Matt (generated)" id="1640554753928-2">
         <addColumn tableName="single_button_press">
-            <column name="button_2_label" type="VARCHAR(20 BYTE)"/>
+            <column name="button_2_label" type="VARCHAR(20 BYTE)" defaultValue="Green Button"/>
         </addColumn>
     </changeSet>
     <changeSet author="Matt (generated)" id="1640554753928-3">
         <addColumn tableName="single_button_press">
-            <column name="button_3_label" type="VARCHAR(20 BYTE)"/>
+            <column name="button_3_label" type="VARCHAR(20 BYTE)" defaultValue="Blue Button"/>
         </addColumn>
     </changeSet>
     <changeSet author="Matt (generated)" id="1640554753928-4">
         <addColumn tableName="single_button_press">
-            <column name="button_4_label" type="VARCHAR(20 BYTE)"/>
+            <column name="button_4_label" type="VARCHAR(20 BYTE)" defaultValue="Black Button"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>
