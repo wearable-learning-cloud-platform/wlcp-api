@@ -1,4 +1,4 @@
-package org.wlcp.wlcpapi.datamodel.master.state;
+package org.wlcp.wlcpapi.datamodel.master;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

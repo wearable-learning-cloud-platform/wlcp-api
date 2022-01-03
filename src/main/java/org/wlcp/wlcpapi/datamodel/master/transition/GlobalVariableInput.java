@@ -8,10 +8,14 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "GLOBAL_VARIABLE_INPUT")
@@ -30,8 +34,9 @@ public class GlobalVariableInput implements Serializable {
 	@Column(name = "SCOPE")
 	private String scope;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name="GLOBAL_VARIABLE_INPUT_MODIFIERS")
+	@Fetch(FetchMode.SELECT)
 	private List<GlobalVariableInputModifier> globalVariableInputModifiers = new ArrayList<GlobalVariableInputModifier>();
 
 	public GlobalVariableInput() {
