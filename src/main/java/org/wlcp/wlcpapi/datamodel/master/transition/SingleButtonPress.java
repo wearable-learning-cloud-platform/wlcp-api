@@ -16,25 +16,25 @@ public class SingleButtonPress implements Serializable {
 	@Column(name = "BUTTON_1")
 	private Boolean button1;
 	
-	@Column(name = "BUTTON_1_LABEL", length = 20)
+	@Column(name = "BUTTON_1_LABEL", columnDefinition="varchar(20) default 'Red Button'")
 	private String button1Label;
 	
 	@Column(name = "BUTTON_2")
 	private Boolean button2;
 	
-	@Column(name = "BUTTON_2_LABEL", length = 20)
+	@Column(name = "BUTTON_2_LABEL", columnDefinition="varchar(20) default 'Green Button'")
 	private String button2Label;
 	
 	@Column(name = "BUTTON_3")
 	private Boolean button3;
 	
-	@Column(name = "BUTTON_3_LABEL", length = 20)
+	@Column(name = "BUTTON_3_LABEL", columnDefinition="varchar(20) default 'Blue Button'")
 	private String button3Label;
 	
 	@Column(name = "BUTTON_4")
 	private Boolean button4;
 	
-	@Column(name = "BUTTON_4_LABEL", length = 20)
+	@Column(name = "BUTTON_4_LABEL", columnDefinition="varchar(20) default 'Black Button'")
 	private String button4Label;
 
 	public SingleButtonPress() {
