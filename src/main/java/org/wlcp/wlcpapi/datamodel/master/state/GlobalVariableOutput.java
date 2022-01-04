@@ -21,7 +21,6 @@ import org.hibernate.annotations.FetchMode;
 @Table(name = "GLOBAL_VARIABLE_OUTPUT")
 public class GlobalVariableOutput implements Serializable {
 
-
 	private static final long serialVersionUID = 1L;
 
 	@Id
