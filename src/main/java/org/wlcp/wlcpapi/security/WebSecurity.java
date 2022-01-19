@@ -59,7 +59,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/import.html").permitAll()
                 .antMatchers(HttpMethod.POST, "/gameController/importJSONGame").permitAll()
                 .antMatchers(HttpMethod.GET, "/gameController/exportJSONGame").permitAll()
-                //temp disable mail .antMatchers(HttpMethod.POST, "/mailController/postMail").permitAll()
+                .antMatchers(HttpMethod.POST, "/mailController/postMail").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new GlobalFilterExceptionHandler(), JWTAuthenticationFilter.class)
