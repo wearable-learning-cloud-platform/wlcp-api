@@ -13,7 +13,7 @@ import org.wlcp.wlcpapi.service.MailService;
 
 @Controller
 @RequestMapping("/mailController")
-@Profile("ecs")
+@Profile("na")
 public class MailController {
 	
 	@Autowired

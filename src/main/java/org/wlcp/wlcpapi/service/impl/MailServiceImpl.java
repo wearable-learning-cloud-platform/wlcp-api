@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.wlcp.wlcpapi.service.MailService;
 
 @Service
-@Profile("ecs")
+@Profile("na")
 public class MailServiceImpl implements MailService {
 	
 	private final String from = "Wearable Learning Cloud Platform Contact Form <wearablelearning@gmail.com>";
