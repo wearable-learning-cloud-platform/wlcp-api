@@ -16,33 +16,58 @@ public class SingleButtonPress implements Serializable {
 	@Column(name = "BUTTON_1")
 	private Boolean button1;
 	
+	@Column(name = "BUTTON_1_LABEL", columnDefinition="varchar(20) default 'Red Button'")
+	private String button1Label;
+	
 	@Column(name = "BUTTON_2")
 	private Boolean button2;
+	
+	@Column(name = "BUTTON_2_LABEL", columnDefinition="varchar(20) default 'Green Button'")
+	private String button2Label;
 	
 	@Column(name = "BUTTON_3")
 	private Boolean button3;
 	
+	@Column(name = "BUTTON_3_LABEL", columnDefinition="varchar(20) default 'Blue Button'")
+	private String button3Label;
+	
 	@Column(name = "BUTTON_4")
 	private Boolean button4;
+	
+	@Column(name = "BUTTON_4_LABEL", columnDefinition="varchar(20) default 'Black Button'")
+	private String button4Label;
 
 	public SingleButtonPress() {
 		super();
 	}
-	
-	public SingleButtonPress(Boolean button1, Boolean button2, Boolean button3, Boolean button4) {
+
+	public SingleButtonPress(Boolean button1, String button1Label, Boolean button2, String button2Label,
+			Boolean button3, String button3Label, Boolean button4, String button4Label) {
 		super();
 		this.button1 = button1;
+		this.button1Label = button1Label;
 		this.button2 = button2;
+		this.button2Label = button2Label;
 		this.button3 = button3;
+		this.button3Label = button3Label;
 		this.button4 = button4;
+		this.button4Label = button4Label;
 	}
-
+	
 	public Boolean getButton1() {
 		return button1;
 	}
 
 	public void setButton1(Boolean button1) {
 		this.button1 = button1;
+	}
+
+	public String getButton1Label() {
+		return button1Label;
+	}
+
+	public void setButton1Label(String button1Label) {
+		this.button1Label = button1Label;
 	}
 
 	public Boolean getButton2() {
@@ -53,12 +78,28 @@ public class SingleButtonPress implements Serializable {
 		this.button2 = button2;
 	}
 
+	public String getButton2Label() {
+		return button2Label;
+	}
+
+	public void setButton2Label(String button2Label) {
+		this.button2Label = button2Label;
+	}
+
 	public Boolean getButton3() {
 		return button3;
 	}
 
 	public void setButton3(Boolean button3) {
 		this.button3 = button3;
+	}
+
+	public String getButton3Label() {
+		return button3Label;
+	}
+
+	public void setButton3Label(String button3Label) {
+		this.button3Label = button3Label;
 	}
 
 	public Boolean getButton4() {
@@ -68,5 +109,14 @@ public class SingleButtonPress implements Serializable {
 	public void setButton4(Boolean button4) {
 		this.button4 = button4;
 	}
+
+	public String getButton4Label() {
+		return button4Label;
+	}
+
+	public void setButton4Label(String button4Label) {
+		this.button4Label = button4Label;
+	}
+	
    
 }

@@ -2,11 +2,11 @@ spring:
   application:
     name: wlcp-api
   datasource:
-    jdbcUrl: jdbc:mysql://wlcp-db:3306/wlcp-api
+    jdbcUrl: jdbc:mysql://wlcp-db-dev:3306/wlcp-api
     username: wlcp
     password: wlcp
   archive-datasource:
-    jdbcUrl: jdbc:mysql://wlcp-db:3306/wlcp-api-archive
+    jdbcUrl: jdbc:mysql://wlcp-db-dev:3306/wlcp-api-archive
     username: wlcp
     password: wlcp
   liquibase:
@@ -24,4 +24,4 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://wlcp-discovery:8761/eureka/
+      defaultZone: http://wlcp-discovery-dev:8761/eureka/

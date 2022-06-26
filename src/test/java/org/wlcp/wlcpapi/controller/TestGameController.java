@@ -19,9 +19,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
+import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
+import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
+import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
 import org.wlcp.wlcpapi.dto.GameDto;
+import org.wlcp.wlcpapi.dto.SaveDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.service.GameService;
 import org.wlcp.wlcpapi.service.UsernameService;
@@ -38,12 +43,18 @@ public class TestGameController {
     
     @MockBean
 	private GameRepository gameRepository;
+    
+    @MockBean
+    private GameSaveRepository gameSaveRepository;
 	
     @MockBean
 	private GameService gameService;
     
     @MockBean
     private UsernameService usernameService;
+    
+    @MockBean
+    private ArchiveGameRepository archiveGameRepository;
     
     @Test
     public void testGetGamesSuccess() throws UnsupportedEncodingException, Exception {
@@ -106,11 +117,14 @@ public class TestGameController {
     
     @Test
     public void testSaveGameSuccess() throws UnsupportedEncodingException, Exception {
+    	SaveDto saveDto = new SaveDto();
     	Game game = new Game();
-    	when(gameService.saveGame(any(Game.class))).thenReturn(game);
+    	saveDto.game = game;
+    	saveDto.gameSave = new GameSave();
+    	when(gameService.saveGame(any(SaveDto.class))).thenReturn(game);
     	mvc.perform(post("/gameController/saveGame/")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")
-    			.content(new ObjectMapper().writeValueAsString(game))
+    			.content(new ObjectMapper().writeValueAsString(saveDto))
     			.contentType(MediaType.APPLICATION_JSON))
     		    .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
     }
@@ -119,6 +133,7 @@ public class TestGameController {
     public void testCopyGameSuccess() throws UnsupportedEncodingException, JsonProcessingException, Exception {
     	Game game = new Game();
     	CopyRenameDeleteGameDto copyDto = new CopyRenameDeleteGameDto();
+    	copyDto.saveType = SaveType.MANUAL;
     	when(gameService.copyGame(any(CopyRenameDeleteGameDto.class))).thenReturn(game);
     	mvc.perform(post("/gameController/copyGame/")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")

@@ -85,6 +85,10 @@ public class Transition implements Serializable {
 	@MapKeyColumn(name = "SCOPE")
 	@Fetch(FetchMode.SELECT)
 	private Map<String, Randoms> randoms = new HashMap<String, Randoms>();
+	
+	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@MapKey(name = "scope")
+	private Map<String, GlobalVariableInput> globalVariables = new HashMap<String, GlobalVariableInput>();
 
 	public Transition() {
 		super();
@@ -95,7 +99,8 @@ public class Transition implements Serializable {
 			Map<String, SequenceButtonPress> sequenceButtonPresses,
 			Map<String, KeyboardInput> keyboardInputs,
 			Map<String, TimerDuration> timerDurations,
-			Map<String, Randoms> randoms) {
+			Map<String, Randoms> randoms,
+			Map<String, GlobalVariableInput> globalVariables) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
@@ -106,6 +111,7 @@ public class Transition implements Serializable {
 		this.keyboardInputs = keyboardInputs;
 		this.timerDurations = timerDurations;
 		this.randoms = randoms;
+		this.globalVariables = globalVariables;
 	}
 
 	public String getTransitionId() {
@@ -178,6 +184,14 @@ public class Transition implements Serializable {
 
 	public void setRandoms(Map<String, Randoms> randoms) {
 		this.randoms = randoms;
+	}
+
+	public Map<String, GlobalVariableInput> getGlobalVariables() {
+		return globalVariables;
+	}
+
+	public void setGlobalVariables(Map<String, GlobalVariableInput> globalVariables) {
+		this.globalVariables = globalVariables;
 	}
 
 }

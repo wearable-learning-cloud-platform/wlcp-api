@@ -10,4 +10,8 @@
 	<include file="liquibase/changelogs/liquibase-child-changelog-4.xml" />
 	<include file="liquibase/changelogs/liquibase-child-changelog-5.xml" />
 	<include file="liquibase/changelogs/liquibase-child-changelog-6.xml" />
+	<include file="liquibase/changelogs/liquibase-child-changelog-7.xml" />
+	<include file="liquibase/changelogs/liquibase-child-changelog-8.xml" />
+	<include file="liquibase/changelogs/liquibase-child-changelog-9.xml" />
+	<include file="liquibase/changelogs/liquibase-child-changelog-10.xml" />
 </databaseChangeLog>

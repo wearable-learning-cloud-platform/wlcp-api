@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.wlcp.wlcpapi.archive.repository.ArchiveGameRepository;
+import org.wlcp.wlcpapi.archive.repository.GameSaveRepository;
+import org.wlcp.wlcpapi.datamodel.enums.SaveType;
 import org.wlcp.wlcpapi.datamodel.master.Game;
+import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
 import org.wlcp.wlcpapi.dto.GameDto;
+import org.wlcp.wlcpapi.dto.SaveDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.service.GameService;
 
@@ -42,6 +48,12 @@ public class GameController {
 	
 	@Autowired
 	private GameService gameService;
+	
+	@Autowired
+	private GameSaveRepository gameSaveRepository;
+	
+	@Autowired
+	private ArchiveGameRepository archiveGameRepository;
 	
 	@GetMapping("/getGames")
 	public ResponseEntity<List<GameDto>> getGames() {
@@ -61,6 +73,16 @@ public class GameController {
 		return new ResponseEntity<Game>(game.isPresent() ? game.get() : null, HttpStatus.OK);
 	}
 	
+	@GetMapping("/getArchivedGame/{gameId}")
+	@Transactional("archiveTransactionManager")
+	public ResponseEntity<Game> getArchivedGame(@PathVariable String gameId) {
+		Optional<Game> game = archiveGameRepository.findById(gameId);
+		Hibernate.initialize(game.get().getStates());
+		Hibernate.initialize(game.get().getConnections());
+		Hibernate.initialize(game.get().getTransitions());
+		return new ResponseEntity<Game>(game.isPresent() ? game.get() : null, HttpStatus.OK);
+	}
+	
 	@GetMapping(value="/getPrivateGames")
 	@ResponseBody
 	public ResponseEntity<List<GameDto>> getPrivateGames(@RequestParam("usernameId") @Valid @NotBlank String usernameId) {
@@ -73,22 +95,44 @@ public class GameController {
 		return new ResponseEntity<List<GameDto>>(gameService.getPublicGames(), HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/getGameHistory")
+    @ResponseBody()
+	public ResponseEntity<List<GameSave>> getGameHistory(@RequestParam("gameId") @Valid @NotBlank String gameId) {
+		return new ResponseEntity<List<GameSave>>(gameSaveRepository.findByMasterGameId(gameId), HttpStatus.OK);
+	}
+	
 	@GetMapping(value="/loadGame")
     @ResponseBody()
 	public ResponseEntity<Game> loadGame(@RequestParam("gameId") @Valid @NotBlank String gameId) {
 		return new ResponseEntity<Game>(gameService.loadGame(gameId), HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/loadGameVersion")
+    @ResponseBody()
+	public ResponseEntity<Game> loadGameVersion(@RequestParam("gameId") @Valid @NotBlank String gameId) {
+		return new ResponseEntity<Game>(gameService.loadGameVersion(gameId), HttpStatus.OK);
+	}
+	
 	@PostMapping(value="/saveGame")
 	@ResponseBody
-	public ResponseEntity<Game> saveGame(@RequestBody Game game) { 
-		return new ResponseEntity<Game>(gameService.saveGame(game), HttpStatus.OK);
+	public ResponseEntity<Game> saveGame(@RequestBody SaveDto saveDto) {
+		return new ResponseEntity<Game>(gameService.saveGame(saveDto), HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/revertGame")
+	@ResponseBody
+	public ResponseEntity<Game> revertGame(@RequestBody CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
+		return new ResponseEntity<Game>(gameService.revertGame(copyRenameDeleteGameDto), HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/copyGame")
 	@ResponseBody
 	public ResponseEntity<Game> copyGame(@RequestBody CopyRenameDeleteGameDto copyRenameDeleteGameDto) {
-		return new ResponseEntity<Game>(gameService.copyGame(copyRenameDeleteGameDto), HttpStatus.OK);
+		if(copyRenameDeleteGameDto.saveType.equals(SaveType.COPY_ARCHIVED)) {
+			return new ResponseEntity<Game>(gameService.copyArchivedGame(copyRenameDeleteGameDto), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Game>(gameService.copyGame(copyRenameDeleteGameDto), HttpStatus.OK);
+		}
 	}
 	
 	@PostMapping(value="/renameGame")
