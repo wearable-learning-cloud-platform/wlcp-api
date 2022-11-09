@@ -18,6 +18,8 @@ import org.wlcp.wlcpapi.dto.UserRegistrationDto;
 import org.wlcp.wlcpapi.repository.UsernameRepository;
 import org.wlcp.wlcpapi.service.UsernameService;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Controller
 @RequestMapping("/usernameController")
 public class UsernameController {
@@ -31,6 +33,9 @@ public class UsernameController {
 	@GetMapping(value="/getUsername/{usernameId}")
 	public ResponseEntity<Username> getUsername(@PathVariable String usernameId) {
 		Optional<Username> username = usernameRepository.findById(usernameId);
+		if(username.isPresent()) {
+			username = Optional.of(new Username(username.get().getUsernameId(), null, null, null, null));
+		}
 		return new ResponseEntity<Username>(username.isPresent() ? username.get() : null, HttpStatus.OK);
 	}
 	

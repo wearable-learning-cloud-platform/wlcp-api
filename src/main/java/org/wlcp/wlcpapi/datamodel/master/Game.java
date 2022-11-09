@@ -22,6 +22,7 @@ import org.wlcp.wlcpapi.datamodel.master.state.State;
 import org.wlcp.wlcpapi.datamodel.master.transition.Transition;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
@@ -48,6 +49,7 @@ public class Game implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "USERNAME", nullable = false)
+	@JsonIgnoreProperties({"password", "firstName", "lastName", "emailAddress"})
 	private Username username;
 	
 	@Column(name = "VISIBILITY")
