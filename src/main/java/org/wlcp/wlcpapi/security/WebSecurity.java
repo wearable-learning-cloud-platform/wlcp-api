@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -34,6 +35,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Value("${security.jwt-secret}")
+	private String jwtSecret;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -63,8 +67,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new GlobalFilterExceptionHandler(), JWTAuthenticationFilter.class)
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtSecret))
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
