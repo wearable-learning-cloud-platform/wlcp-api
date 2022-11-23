@@ -3,7 +3,6 @@ package org.wlcp.wlcpapi.security;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static org.wlcp.wlcpapi.security.SecurityConstants.EXPIRATION_TIME;
 import static org.wlcp.wlcpapi.security.SecurityConstants.HEADER_STRING;
-import static org.wlcp.wlcpapi.security.SecurityConstants.SECRET;
 import static org.wlcp.wlcpapi.security.SecurityConstants.TOKEN_PREFIX;
 
 import java.io.IOException;
@@ -30,9 +29,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	
 	private AuthenticationManager authenticationManager;
+	private String jwtSecret;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, String jwtSecret) {
         this.authenticationManager = authenticationManager;
+        this.jwtSecret = jwtSecret;
     }
 
     @Override
@@ -61,7 +62,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = JWT.create()
                 .withSubject(((User) auth.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(HMAC512(SECRET.getBytes()));
+                .sign(HMAC512(jwtSecret.getBytes()));
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         
     	Cookie cookie = new Cookie("wlcp.userSession", token);

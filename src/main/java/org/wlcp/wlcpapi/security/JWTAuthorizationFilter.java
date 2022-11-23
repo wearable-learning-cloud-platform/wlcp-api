@@ -1,7 +1,6 @@
 package org.wlcp.wlcpapi.security;
 
 import static org.wlcp.wlcpapi.security.SecurityConstants.HEADER_STRING;
-import static org.wlcp.wlcpapi.security.SecurityConstants.SECRET;
 import static org.wlcp.wlcpapi.security.SecurityConstants.TOKEN_PREFIX;
 
 import java.io.IOException;
@@ -21,9 +20,12 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+	
+	private String jwtSecret;
 
-    public JWTAuthorizationFilter(AuthenticationManager authManager) {
+    public JWTAuthorizationFilter(AuthenticationManager authManager, String jwtSecret) {
         super(authManager);
+        this.jwtSecret = jwtSecret;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
             // parse the token.
-            String user = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
+            String user = JWT.require(Algorithm.HMAC512(jwtSecret.getBytes()))
                     .build()
                     .verify(token.replace(TOKEN_PREFIX, ""))
                     .getSubject();
