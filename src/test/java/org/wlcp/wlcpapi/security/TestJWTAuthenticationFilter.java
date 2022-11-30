@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -36,10 +37,12 @@ public class TestJWTAuthenticationFilter {
 	@Mock
 	private AuthenticationManager authenticationManager;
 	
+	@Value("${security.jwt-secret}")
+	private String jwtSecret;
 	
 	@Test
 	public void testAttemptAuthenticationSuccess() throws IOException, ServletException {
-		JWTAuthenticationFilter filterUnderTest = new JWTAuthenticationFilter(authenticationManager);
+		JWTAuthenticationFilter filterUnderTest = new JWTAuthenticationFilter(authenticationManager, jwtSecret);
 	    MockFilterChain chain = new MockFilterChain();
 	    MockHttpServletRequest req = new MockHttpServletRequest();
 	    req.setContent(new ObjectMapper().writeValueAsBytes(new Username("", "", "", "", "")));
@@ -54,7 +57,7 @@ public class TestJWTAuthenticationFilter {
 	
 	@Test
 	public void testAttemptAuthenticationFailure() throws IOException, ServletException {
-		JWTAuthenticationFilter filterUnderTest = new JWTAuthenticationFilter(authenticationManager);
+		JWTAuthenticationFilter filterUnderTest = new JWTAuthenticationFilter(authenticationManager, jwtSecret);
 	    MockFilterChain chain = new MockFilterChain();
 	    MockHttpServletRequest req = new MockHttpServletRequest();
 	    req.setContent(new ObjectMapper().writeValueAsBytes(new Username("", "", "", "", "")));

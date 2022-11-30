@@ -2,3 +2,5 @@ spring:
   application:
     name: wlcp-api
   liquibase:    enabled: false
+security:
+  jwt-secret: WlcpRocks!
