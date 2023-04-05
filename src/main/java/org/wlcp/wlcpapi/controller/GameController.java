@@ -101,7 +101,7 @@ public class GameController {
 		return new ResponseEntity<List<GameSave>>(gameSaveRepository.findByMasterGameId(gameId), HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/loadGame")
+	@GetMapping(value="/loadGame2")
     @ResponseBody()
 	public ResponseEntity<Game> loadGame(@RequestParam("gameId") @Valid @NotBlank String gameId) {
 		return new ResponseEntity<Game>(gameService.loadGame(gameId), HttpStatus.OK);
