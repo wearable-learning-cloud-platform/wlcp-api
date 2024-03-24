@@ -26,6 +26,7 @@ import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
 import org.wlcp.wlcpapi.dto.GameDto;
+import org.wlcp.wlcpapi.dto.GameTeamPlayerDto;
 import org.wlcp.wlcpapi.dto.SaveDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.service.GameService;
@@ -80,8 +81,8 @@ public class TestGameController {
     
     @Test
     public void testGetPrivateGamesSuccess() throws UnsupportedEncodingException, Exception {
-    	GameDto gameDto = new GameDto("gameId");
-    	List<GameDto> games = new ArrayList<GameDto>();
+    	GameTeamPlayerDto gameDto = new GameTeamPlayerDto("gameId", 3, 3);
+    	List<GameTeamPlayerDto> games = new ArrayList<GameTeamPlayerDto>();
     	games.add(gameDto);
     	when(gameService.getPrivateGames(any(String.class))).thenReturn(games);
     	mvc.perform(get("/gameController/getPrivateGames/")
@@ -93,8 +94,8 @@ public class TestGameController {
     
     @Test
     public void testGetPublicGamesSuccess() throws UnsupportedEncodingException, Exception {
-    	GameDto gameDto = new GameDto("gameId");
-    	List<GameDto> games = new ArrayList<GameDto>();
+    	GameTeamPlayerDto gameDto = new GameTeamPlayerDto("gameId", 3, 3);
+    	List<GameTeamPlayerDto> games = new ArrayList<GameTeamPlayerDto>();
     	games.add(gameDto);
     	when(gameService.getPrivateGames(any(String.class))).thenReturn(games);
     	mvc.perform(get("/gameController/getPublicGames/")

@@ -5,14 +5,14 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
-import org.wlcp.wlcpapi.dto.GameDto;
+import org.wlcp.wlcpapi.dto.GameTeamPlayerDto;
 import org.wlcp.wlcpapi.dto.SaveDto;
 
 public interface GameService {
 	
-	public List<GameDto> getPrivateGames(String usernameId);
+	public List<GameTeamPlayerDto> getPrivateGames(String usernameId);
 	
-	public List<GameDto> getPublicGames();
+	public List<GameTeamPlayerDto> getPublicGames();
 	
 	public Game loadGame(String gameId);
 	

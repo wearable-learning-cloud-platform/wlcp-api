@@ -32,6 +32,7 @@ import org.wlcp.wlcpapi.datamodel.master.Game;
 import org.wlcp.wlcpapi.datamodel.master.GameSave;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
 import org.wlcp.wlcpapi.dto.GameDto;
+import org.wlcp.wlcpapi.dto.GameTeamPlayerDto;
 import org.wlcp.wlcpapi.dto.SaveDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
 import org.wlcp.wlcpapi.service.GameService;
@@ -85,14 +86,14 @@ public class GameController {
 	
 	@GetMapping(value="/getPrivateGames")
 	@ResponseBody
-	public ResponseEntity<List<GameDto>> getPrivateGames(@RequestParam("usernameId") @Valid @NotBlank String usernameId) {
-		return new ResponseEntity<List<GameDto>>(gameService.getPrivateGames(usernameId), HttpStatus.OK);
+	public ResponseEntity<List<GameTeamPlayerDto>> getPrivateGames(@RequestParam("usernameId") @Valid @NotBlank String usernameId) {
+		return new ResponseEntity<List<GameTeamPlayerDto>>(gameService.getPrivateGames(usernameId), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/getPublicGames")
 	@ResponseBody
-	public ResponseEntity<List<GameDto>> getPublicGames() {
-		return new ResponseEntity<List<GameDto>>(gameService.getPublicGames(), HttpStatus.OK);
+	public ResponseEntity<List<GameTeamPlayerDto>> getPublicGames() {
+		return new ResponseEntity<List<GameTeamPlayerDto>>(gameService.getPublicGames(), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/getGameHistory")

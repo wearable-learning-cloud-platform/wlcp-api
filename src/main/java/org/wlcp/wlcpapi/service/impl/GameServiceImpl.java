@@ -33,7 +33,7 @@ import org.wlcp.wlcpapi.datamodel.master.transition.KeyboardInput;
 import org.wlcp.wlcpapi.datamodel.master.transition.SequenceButtonPress;
 import org.wlcp.wlcpapi.datamodel.master.transition.Transition;
 import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
-import org.wlcp.wlcpapi.dto.GameDto;
+import org.wlcp.wlcpapi.dto.GameTeamPlayerDto;
 import org.wlcp.wlcpapi.dto.SaveDto;
 import org.wlcp.wlcpapi.helper.HelperMethods;
 import org.wlcp.wlcpapi.repository.GameRepository;
@@ -65,26 +65,26 @@ public class GameServiceImpl implements GameService {
 	private ObjectMapper objectMapper;
 	
 	@Override
-	public List<GameDto> getPrivateGames(String usernameId) {
+	public List<GameTeamPlayerDto> getPrivateGames(String usernameId) {
 		Username username = new Username();
 		username.setUsernameId(usernameId);
 		List<Game> games = gameRepository.findByUsername(username);
-		List<GameDto> returnGames = new ArrayList<GameDto>();
+		List<GameTeamPlayerDto> returnGames = new ArrayList<GameTeamPlayerDto>();
 		for(Game game : games) {
 			if(!game.getDataLog()) {
-				returnGames.add(new GameDto(game.getGameId()));
+				returnGames.add(new GameTeamPlayerDto(game.getGameId(), game.getTeamCount(), game.getPlayersPerTeam()));
 			}
 		}
 		return returnGames;
 	}
 
 	@Override
-	public List<GameDto> getPublicGames() {
+	public List<GameTeamPlayerDto> getPublicGames() {
 		List<Game> games = gameRepository.findAll();
-		List<GameDto> returnGames = new ArrayList<GameDto>();
+		List<GameTeamPlayerDto> returnGames = new ArrayList<GameTeamPlayerDto>();
 		for(Game game : games) {
 			if(game.getVisibility() && !game.getDataLog()) {
-				returnGames.add(new GameDto(game.getGameId()));
+				returnGames.add(new GameTeamPlayerDto(game.getGameId(), game.getTeamCount(), game.getPlayersPerTeam()));
 			}
 		}
 		return returnGames;
