@@ -38,7 +38,7 @@ public class ArchiveDataSource {
 	    Properties properties = new Properties();
 	    properties.setProperty("hibernate.hbm2ddl.auto", "none");
 	    properties.setProperty("hibernate.event.merge.entity_copy_observer", "allow");
-	    properties.setProperty("hibernate.physical_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
+	    properties.setProperty("hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
 	    properties.setProperty("hibernate.implicit_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy");
 	    return properties;
 	}

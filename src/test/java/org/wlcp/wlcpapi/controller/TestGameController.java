@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,6 +29,7 @@ import org.wlcp.wlcpapi.dto.CopyRenameDeleteGameDto;
 import org.wlcp.wlcpapi.dto.GameDto;
 import org.wlcp.wlcpapi.dto.SaveDto;
 import org.wlcp.wlcpapi.repository.GameRepository;
+import org.wlcp.wlcpapi.security.WebSecurity;
 import org.wlcp.wlcpapi.service.GameService;
 import org.wlcp.wlcpapi.service.UsernameService;
 
@@ -36,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = GameController.class)
+@Import(WebSecurity.class)
 public class TestGameController {
 
     @Autowired
@@ -84,7 +87,7 @@ public class TestGameController {
     	List<GameDto> games = new ArrayList<GameDto>();
     	games.add(gameDto);
     	when(gameService.getPrivateGames(any(String.class))).thenReturn(games);
-    	mvc.perform(get("/gameController/getPrivateGames/")
+    	mvc.perform(get("/gameController/getPrivateGames")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")
     			.param("usernameId", "usernameId")
     			.contentType(MediaType.APPLICATION_JSON))
@@ -97,7 +100,7 @@ public class TestGameController {
     	List<GameDto> games = new ArrayList<GameDto>();
     	games.add(gameDto);
     	when(gameService.getPrivateGames(any(String.class))).thenReturn(games);
-    	mvc.perform(get("/gameController/getPublicGames/")
+    	mvc.perform(get("/gameController/getPublicGames")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")
     			.param("usernameId", "usernameId")
     			.contentType(MediaType.APPLICATION_JSON))
@@ -108,7 +111,7 @@ public class TestGameController {
     public void testLoadGameSuccess() throws UnsupportedEncodingException, Exception {
     	Game game = new Game();
     	when(gameService.loadGame(any(String.class))).thenReturn(game);
-    	mvc.perform(get("/gameController/loadGame/")
+    	mvc.perform(get("/gameController/loadGame")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")
     			.param("gameId", "gameId")
     			.contentType(MediaType.APPLICATION_JSON))
@@ -122,7 +125,7 @@ public class TestGameController {
     	saveDto.game = game;
     	saveDto.gameSave = new GameSave();
     	when(gameService.saveGame(any(SaveDto.class))).thenReturn(game);
-    	mvc.perform(post("/gameController/saveGame/")
+    	mvc.perform(post("/gameController/saveGame")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")
     			.content(new ObjectMapper().writeValueAsString(saveDto))
     			.contentType(MediaType.APPLICATION_JSON))
@@ -135,7 +138,7 @@ public class TestGameController {
     	CopyRenameDeleteGameDto copyDto = new CopyRenameDeleteGameDto();
     	copyDto.saveType = SaveType.MANUAL;
     	when(gameService.copyGame(any(CopyRenameDeleteGameDto.class))).thenReturn(game);
-    	mvc.perform(post("/gameController/copyGame/")
+    	mvc.perform(post("/gameController/copyGame")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")
     			.content(new ObjectMapper().writeValueAsString(copyDto))
     			.contentType(MediaType.APPLICATION_JSON))
@@ -147,7 +150,7 @@ public class TestGameController {
     	Game game = new Game();
     	CopyRenameDeleteGameDto renameDto = new CopyRenameDeleteGameDto();
     	when(gameService.renameGame(any(CopyRenameDeleteGameDto.class))).thenReturn(game);
-    	mvc.perform(post("/gameController/renameGame/")
+    	mvc.perform(post("/gameController/renameGame")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")
     			.content(new ObjectMapper().writeValueAsString(renameDto))
     			.contentType(MediaType.APPLICATION_JSON))
@@ -157,7 +160,7 @@ public class TestGameController {
     @Test
     public void testDeleteGameSuccess() throws UnsupportedEncodingException, JsonProcessingException, Exception {
     	CopyRenameDeleteGameDto deleteDto = new CopyRenameDeleteGameDto();
-    	mvc.perform(post("/gameController/deleteGame/")
+    	mvc.perform(post("/gameController/deleteGame")
     			.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIifQ.CFsDr9KnYtLCfXkvDyyDyEUdnu5RPPyFQ32jiKMQ8NsbmTfMwVmIeWO0AJxYs8uyPP4txkvy4sP4T6asVN5cIw")
     			.content(new ObjectMapper().writeValueAsString(deleteDto))
     			.contentType(MediaType.APPLICATION_JSON))

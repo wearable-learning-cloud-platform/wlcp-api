@@ -14,16 +14,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.wlcp.wlcpapi.datamodel.master.ObjectStore;
+import org.wlcp.wlcpapi.security.WebSecurity;
 import org.wlcp.wlcpapi.service.ObjectStoreService;
 import org.wlcp.wlcpapi.service.UsernameService;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = ObjectStoreController.class)
+@Import(WebSecurity.class)
 public class TestObjectStoreController {
 
     @Autowired
