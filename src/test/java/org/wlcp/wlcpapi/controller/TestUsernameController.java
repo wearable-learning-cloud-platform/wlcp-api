@@ -14,18 +14,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.wlcp.wlcpapi.datamodel.master.Username;
 import org.wlcp.wlcpapi.dto.UserRegistrationDto;
 import org.wlcp.wlcpapi.repository.UsernameRepository;
+import org.wlcp.wlcpapi.security.WebSecurity;
 import org.wlcp.wlcpapi.service.UsernameService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = UsernameController.class)
+@Import(WebSecurity.class)
 public class TestUsernameController {
 	
     @Autowired

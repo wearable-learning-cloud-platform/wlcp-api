@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.sql.DataSource;
 
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
+import org.springframework.util.StringUtils;
 
 import liquibase.integration.spring.SpringLiquibase;
 
@@ -53,11 +54,11 @@ public class HelperMethods {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog(properties.getChangeLog());
-        liquibase.setContexts(properties.getContexts());
+        liquibase.setContexts(StringUtils.collectionToCommaDelimitedString(properties.getContexts()));
         liquibase.setDefaultSchema(properties.getDefaultSchema());
         liquibase.setDropFirst(properties.isDropFirst());
         liquibase.setShouldRun(properties.isEnabled());
-        liquibase.setLabels(properties.getLabels());
+        liquibase.setLabels(StringUtils.collectionToCommaDelimitedString(properties.getLabelFilter()));
         liquibase.setChangeLogParameters(properties.getParameters());
         liquibase.setRollbackFile(properties.getRollbackFile());
         return liquibase;
