@@ -2,10 +2,10 @@ package org.wlcp.wlcpapi.datamodel.master;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 import org.wlcp.wlcpapi.datamodel.enums.VariableType;
 

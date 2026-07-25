@@ -1,7 +1,7 @@
 package org.wlcp.wlcpapi.datamodel.master.transition;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Entity implementation class for Entity: SingleButtonPress
