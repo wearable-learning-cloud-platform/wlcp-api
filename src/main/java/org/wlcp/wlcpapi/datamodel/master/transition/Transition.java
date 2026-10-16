@@ -90,6 +90,12 @@ public class Transition implements Serializable {
 	@MapKey(name = "scope")
 	private Map<String, GlobalVariableInput> globalVariables = new HashMap<String, GlobalVariableInput>();
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "PHOTO_CHECK")
+	@MapKeyColumn(name = "SCOPE")
+	@Fetch(FetchMode.SELECT)
+	private Map<String, PhotoCheck> photoChecks = new HashMap<String, PhotoCheck>();
+
 	public Transition() {
 		super();
 	}
@@ -164,6 +170,14 @@ public class Transition implements Serializable {
 
 	public Map<String, KeyboardInput> getKeyboardInputs() {
 		return keyboardInputs;
+	}
+
+	public Map<String, PhotoCheck> getPhotoChecks() {
+		return photoChecks;
+	}
+
+	public void setPhotoChecks(Map<String, PhotoCheck> photoChecks) {
+		this.photoChecks = photoChecks;
 	}
 
 	public void setKeyboardInputs(Map<String, KeyboardInput> keyboardInputs) {

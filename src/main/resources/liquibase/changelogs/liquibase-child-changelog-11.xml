@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <!-- Photo check transition (Teachable Machine image model). One row per transition and scope,
+         same shape as timer_duration. -->
+    <changeSet author="Aryaman" id="1760587200000-1">
+        <createTable tableName="photo_check">
+            <column name="transition_transition_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="model_url" type="VARCHAR(1024)"/>
+            <column name="target_class" type="VARCHAR(255)"/>
+            <column name="threshold" type="DOUBLE"/>
+            <column name="scope" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Aryaman" id="1760587200000-2">
+        <addForeignKeyConstraint baseColumnNames="transition_transition_id" baseTableName="photo_check" constraintName="FK_photo_check_transition" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="transition_id" referencedTableName="transition" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
